@@ -9,7 +9,7 @@ const SignUpPage = () => {
   const FormSteps = [FirstStep, SecondStep][currentStep];
   return (
     <div>
-      <FormSteps />
+      <FormSteps currentStep={currentStep} setCurrentStep={setCurrentStep} />
     </div>
   );
 };

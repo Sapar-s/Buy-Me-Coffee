@@ -11,7 +11,7 @@ export const SideBar = () => {
         </h4>
       </div>
       <div className="inline-flex flex-col gap-10 items-center ">
-        <Image alt="" src={"/coffee.png"} height={240} width={240} />
+        <Image alt="" src={"/coffee.svg"} height={240} width={240} />
         <div className="flex flex-col gap-3 items-start ">
           <h4 className="text-[24px] font-[700] leading-normal w-[455px] text-center ">
             Fund your creative work
