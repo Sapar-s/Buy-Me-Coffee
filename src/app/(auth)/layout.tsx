@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { SideBar } from "../_components/SideBar";
+import { AuthSideBar } from "../_components/AuthSideBar";
 
 type Props = {
   children: ReactNode;
@@ -8,7 +8,7 @@ type Props = {
 const Layout = (props: Props) => {
   return (
     <div className="flex gap-[20px] ">
-      <SideBar />
+      <AuthSideBar />
       <div className="w-full">{props.children}</div>
     </div>
   );

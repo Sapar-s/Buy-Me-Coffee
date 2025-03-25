@@ -1,7 +1,7 @@
 import { Coffee } from "lucide-react";
 import Image from "next/image";
 
-export const SideBar = () => {
+export const AuthSideBar = () => {
   return (
     <div className="bg-[#FBBF24] w-full h-screen flex items-center justify-center ">
       <div className="flex items-center gap-2 absolute top-[32px] left-[80px] ">
