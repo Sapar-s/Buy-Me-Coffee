@@ -14,6 +14,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { useEffect, useState } from "react";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -28,7 +29,8 @@ const FirstStep = ({
   setCurrentStep: (_e: number) => void;
   currentStep: number;
 }) => {
-  // 1. Define your form.
+  const [data, setData] = useState<string | null>(null);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -42,6 +44,24 @@ const FirstStep = ({
     localStorage.setItem("userName", values.username);
     console.log("firststep", values);
   }
+
+  const getData = async () => {
+    try {
+      const res = await fetch("/api/users");
+      const jsonData = await res.json();
+
+      console.log("jsonData", jsonData);
+      setData(jsonData);
+    } catch (error) {
+      console.log("Error", error);
+      alert("Error in getData");
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <div className="w-full h-screen flex items-center justify-center ">
       <Link href={"/login"}>

@@ -47,9 +47,28 @@ const LoginPage = () => {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    router.push("/profile");
+    login(values.email, values.password);
     console.log(values);
   }
+
+  const login = async (email: string, password: string) => {
+    try {
+      const res = await fetch("/api/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({}),
+      });
+      const jsonData = await res.json();
+      console.log("jsonData", jsonData);
+      if (jsonData.error) {
+        alert(jsonData.message);
+        return;
+      }
+      router.push("/profile");
+    } catch (error) {}
+  };
 
   useEffect(() => {
     const getUserName = localStorage.getItem("userName");
