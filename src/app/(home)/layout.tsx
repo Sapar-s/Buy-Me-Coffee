@@ -9,9 +9,15 @@ type Props = {
 const Layout = (props: Props) => {
   return (
     <div>
-      <Header />
+      <div className="sticky top-0 z-50">
+        <Header />
+      </div>
+
       <div className="w-screen justify-center px-[80px] flex mt-10 ">
-        <HomeSideBar />
+        <div className="sticky  top-[96px] h-[300px] ">
+          <HomeSideBar />
+        </div>
+
         {props.children}
       </div>
     </div>

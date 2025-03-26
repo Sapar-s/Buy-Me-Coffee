@@ -5,7 +5,7 @@ import React from "react";
 
 export const Header = () => {
   return (
-    <div className="w-screen flex justify-center ">
+    <div className="w-screen flex justify-center bg-background ">
       <div className="flex justify-between items-center py-2 px-4 max-w-[1440px] w-full ">
         <div className="max-w-[1280px] w-full flex justify-between items-center ">
           <div className="flex gap-2 items-center ">

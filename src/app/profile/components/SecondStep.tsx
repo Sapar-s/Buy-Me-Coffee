@@ -25,7 +25,7 @@ import {
 import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
-  country: z.string().nonempty("Please select country"),
+  // country: z.string().nonempty("Please select country"),
   firstName: z.string().nonempty("Please enter your first name"),
   lastName: z.string().nonempty("Please enter your last name"),
   about: z.string().nonempty("Please enter your card number"),
@@ -39,7 +39,7 @@ export const SecondStep = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      country: "",
+      // country: "",
       firstName: "",
       lastName: "",
       about: "",

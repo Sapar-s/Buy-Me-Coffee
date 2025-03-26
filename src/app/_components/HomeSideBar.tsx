@@ -16,7 +16,7 @@ export const HomeSideBar = () => {
     { href: "/acc-settings", label: "Account settings" },
   ];
   return (
-    <div className="w-[251px] flex flex-col items-start gap-1 ">
+    <div className="w-[251px] flex flex-col items-start gap-1  ">
       {links.map(({ href, label, icon }) => (
         <Link key={href} href={href}>
           <Button
