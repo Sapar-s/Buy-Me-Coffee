@@ -21,18 +21,7 @@ import { useEffect, useState } from "react";
 
 const formSchema = z.object({
   email: z.string().email(),
-  password: z
-    .string()
-    .min(8, { message: "Password must be at least 8 characters long." })
-    .refine((password) => /[A-Z]/.test(password), {
-      message: "Password must include at least one uppercase letter.",
-    })
-    .refine((password) => /[a-z]/.test(password), {
-      message: "Password must include at least one lowercase letter.",
-    })
-    .refine((password) => /[0-9]/.test(password), {
-      message: "Password must include at least one number.",
-    }),
+  password: z.string(),
 });
 
 const LoginPage = () => {
@@ -58,14 +47,15 @@ const LoginPage = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({}),
+        body: JSON.stringify({ email: email, password: password }),
       });
       const jsonData = await res.json();
-      console.log("jsonData", jsonData);
+
       if (jsonData.error) {
         alert(jsonData.message);
         return;
       }
+
       router.push("/profile");
     } catch (error) {}
   };
