@@ -25,7 +25,7 @@ import {
 import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
-  // country: z.string().nonempty("Please select country"),
+  country: z.string().nonempty("Please select country"),
   firstName: z.string().nonempty("Please enter your first name"),
   lastName: z.string().nonempty("Please enter your last name"),
   about: z.string().nonempty("Please enter your card number"),
@@ -39,7 +39,7 @@ export const SecondStep = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      // country: "",
+      country: "",
       firstName: "",
       lastName: "",
       about: "",
@@ -72,22 +72,27 @@ export const SecondStep = () => {
             <div className="w-full flex flex-col items-start gap-6 ">
               <FormField
                 control={form.control}
-                name="firstName"
+                name="country"
                 render={({ field }) => (
                   <FormItem className="flex w-full flex-col gap-2 items-start ">
                     <FormLabel>Select country</FormLabel>
-                    <FormControl>
-                      <Select {...field}>
+
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
                         <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select" />
                         </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="light">Light</SelectItem>
-                          <SelectItem value="dark">Dark</SelectItem>
-                          <SelectItem value="system">System</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="light">Light</SelectItem>
+                        <SelectItem value="dark">Dark</SelectItem>
+                        <SelectItem value="system">System</SelectItem>
+                      </SelectContent>
+                    </Select>
+
                     <FormDescription hidden></FormDescription>
                     <FormMessage />
                   </FormItem>
