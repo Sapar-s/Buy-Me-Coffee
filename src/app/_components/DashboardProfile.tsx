@@ -77,7 +77,7 @@ export const DashboardProfile = () => {
                           aria-label="Toggle $1"
                         >
                           <Badge
-                            className={`h-10 py-2 px-4 }`}
+                            className={`h-10 py-2 px-4 cursor-pointer`}
                             variant="secondary"
                           >
                             <Coffee /> $1
@@ -89,7 +89,7 @@ export const DashboardProfile = () => {
                           aria-label="Toggle $2"
                         >
                           <Badge
-                            className="h-10 py-2 px-4 "
+                            className="h-10 py-2 px-4 cursor-pointer"
                             variant="secondary"
                           >
                             <Coffee /> $2
@@ -101,7 +101,7 @@ export const DashboardProfile = () => {
                           aria-label="Toggle $5"
                         >
                           <Badge
-                            className="h-10 py-2 px-4 "
+                            className="h-10 py-2 px-4 cursor-pointer"
                             variant="secondary"
                           >
                             <Coffee /> $5
@@ -113,7 +113,7 @@ export const DashboardProfile = () => {
                           aria-label="Toggle $10"
                         >
                           <Badge
-                            className="h-10 py-2 px-4 "
+                            className="h-10 py-2 px-4 cursor-pointer"
                             variant="secondary"
                           >
                             <Coffee /> $10
