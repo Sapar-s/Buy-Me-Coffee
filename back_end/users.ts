@@ -62,7 +62,7 @@ export const getUsers = () => {
         socialMediaURL: "www.facebook.com",
         backgroundImage: "",
         successsMessage: "asdasd",
-        userId: "1",
+        userId: "2",
         createdAt: "2025,3,28",
         updatedAt: "",
       },

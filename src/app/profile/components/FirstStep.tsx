@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { z } from "zod";
 import {
   Form,
@@ -15,6 +15,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { useState } from "react";
+import { Camera } from "lucide-react";
+import Image from "next/image";
 
 const formSchema = z.object({
   photo: z.string().nonempty("Зураг заавал шаардлагатай"),
@@ -30,6 +33,7 @@ export const FirstStep = ({
   currentStep: number;
   setCurrentStep: (_e: number) => void;
 }) => {
+  const [image, setImage] = useState<string | null>(null);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -44,6 +48,13 @@ export const FirstStep = ({
     console.log(values);
     setCurrentStep(currentStep + 1);
   }
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setImage(URL.createObjectURL(file));
+    }
+  };
   return (
     <div>
       <div className="">
@@ -62,11 +73,31 @@ export const FirstStep = ({
                 <FormItem className="flex flex-col gap-3 items-start ">
                   <FormLabel>Add photo</FormLabel>
                   <FormControl>
-                    <Input
-                      type="file"
-                      className="w-40 h-40 rounded-full border-[2px] border-dashed "
-                      {...field}
-                    />
+                    {image ? (
+                      <div>
+                        <Image
+                          alt=""
+                          src={image}
+                          height={160}
+                          width={160}
+                          className="w-40 h-40 rounded-full bg-cover bg-center "
+                        />
+                      </div>
+                    ) : (
+                      <label
+                        {...field}
+                        htmlFor="photo"
+                        className="w-40 h-40 rounded-full cursor-pointer border-[2px] border-dashed flex items-center justify-center "
+                      >
+                        <Camera className="text-gray-300 h-[28px] w-[28px] " />
+                        <Input
+                          type="file"
+                          id="photo"
+                          className="hidden"
+                          onChange={handleFileChange}
+                        />
+                      </label>
+                    )}
                   </FormControl>
                   <FormDescription hidden></FormDescription>
                   <FormMessage />

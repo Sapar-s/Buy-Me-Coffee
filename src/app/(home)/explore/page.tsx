@@ -45,7 +45,7 @@ const Explore = () => {
                       </h4>
                     </div>
                     <div className="flex flex-col gap-1 items-end w-[258.5px] ">
-                      <Link href={"/view-profile"}>
+                      <Link href={`/view-profile/${user?.profile?.userId}`}>
                         <Button
                           variant={"secondary"}
                           className="cursor-pointer "

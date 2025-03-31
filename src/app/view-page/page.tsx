@@ -1,8 +1,7 @@
-import React from "react";
-import { PersonalPage } from "../_components/PersonalPage";
+import { AddCoverImg } from "../_components/AddCoverImg";
 import { DashboardProfile } from "../_components/DashboardProfile";
 import { Header } from "../_components/Header";
-import { AddCoverImg } from "../_components/AddCoverImg";
+import { PersonalPage } from "../_components/PersonalPage";
 
 const Page = () => {
   return (
