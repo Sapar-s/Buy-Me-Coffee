@@ -33,8 +33,11 @@ const formSchema = z.object({
     }),
 });
 
-export const SecondStep = () => {
-  const router = useRouter();
+export const SecondStep = ({
+  signUp,
+}: {
+  signUp: (email: string, password: string) => void;
+}) => {
   const [userName, setUserName] = useState<string | null>(null);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -44,8 +47,8 @@ export const SecondStep = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    router.push("/login");
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    await signUp(values.email, values.password);
     console.log(values);
   }
 

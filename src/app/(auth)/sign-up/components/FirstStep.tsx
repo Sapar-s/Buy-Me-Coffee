@@ -15,6 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useEffect, useState } from "react";
+import { useUser } from "@/app/_context/UserContext";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -25,9 +26,11 @@ const formSchema = z.object({
 const FirstStep = ({
   setCurrentStep,
   currentStep,
+  setUserName,
 }: {
   setCurrentStep: (_e: number) => void;
   currentStep: number;
+  setUserName: (_e: string) => void;
 }) => {
   const [data, setData] = useState<string | null>(null);
 
@@ -42,6 +45,7 @@ const FirstStep = ({
   function onSubmit(values: z.infer<typeof formSchema>) {
     setCurrentStep(currentStep + 1);
     localStorage.setItem("userName", values.username);
+    setUserName(values.username);
     console.log("firststep", values);
   }
 

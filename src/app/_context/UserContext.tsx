@@ -14,6 +14,7 @@ type UserContextType = {
     email: string;
     id: string;
   };
+  // signUp: (username: string, email: string, password: string) => void;
 };
 
 const userContext = createContext<UserContextType | null>(null);
@@ -48,8 +49,28 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  // const signUp = async (username: string, email: string, password: string) => {
+  //   try {
+  //     await fetch("/api/sign-up", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         username: username,
+  //         email: email,
+  //         password: password,
+  //       }),
+  //     });
+  //   } catch (error) {
+  //     console.log("error", error);
+  //     alert("error in signup user");
+  //   }
+  // };
+
   useEffect(() => {
     getUser();
+    // signUp();
   }, []);
 
   return (

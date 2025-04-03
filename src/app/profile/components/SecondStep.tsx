@@ -23,6 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
+import { CountryDropdown } from "@/components/ui/country-dropdown";
 
 const formSchema = z.object({
   country: z.string().nonempty("Please select country"),
@@ -77,21 +78,15 @@ export const SecondStep = () => {
                   <FormItem className="flex w-full flex-col gap-2 items-start ">
                     <FormLabel>Select country</FormLabel>
 
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="light">Light</SelectItem>
-                        <SelectItem value="dark">Dark</SelectItem>
-                        <SelectItem value="system">System</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <div className="w-full">
+                      <CountryDropdown
+                        placeholder="Country"
+                        defaultValue={field.value}
+                        onChange={(country) => {
+                          field.onChange(country.alpha3);
+                        }}
+                      />
+                    </div>
 
                     <FormDescription hidden></FormDescription>
                     <FormMessage />

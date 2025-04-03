@@ -42,7 +42,7 @@ const LoginPage = () => {
 
   const login = async (email: string, password: string) => {
     try {
-      const res = await fetch("/api/users", {
+      const res = await fetch("/api/sign-in", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
