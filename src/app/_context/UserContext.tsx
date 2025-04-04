@@ -38,7 +38,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
 
       setUsers(jsonData.data);
 
-      console.log("get user jsonData", jsonData);
+      // console.log("get user jsonData", jsonData);
       if (jsonData.error) {
         alert(jsonData.message);
         return;
@@ -49,28 +49,8 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // const signUp = async (username: string, email: string, password: string) => {
-  //   try {
-  //     await fetch("/api/sign-up", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         username: username,
-  //         email: email,
-  //         password: password,
-  //       }),
-  //     });
-  //   } catch (error) {
-  //     console.log("error", error);
-  //     alert("error in signup user");
-  //   }
-  // };
-
   useEffect(() => {
     getUser();
-    // signUp();
   }, []);
 
   return (
