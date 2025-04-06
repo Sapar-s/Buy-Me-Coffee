@@ -29,7 +29,7 @@ const formSchema = z.object({
   country: z.string().nonempty("Please select country"),
   firstName: z.string().nonempty("Please enter your first name"),
   lastName: z.string().nonempty("Please enter your last name"),
-  about: z.string().nonempty("Please enter your card number"),
+  cardNumber: z.string().nonempty("Please enter your card number"),
   expires: z.string().nonempty("Please enter month"),
   year: z.string().nonempty("Please enter year"),
   cvc: z.string().nonempty("Please enter your  cvc"),
@@ -43,15 +43,58 @@ export const SecondStep = () => {
       country: "",
       firstName: "",
       lastName: "",
-      about: "",
+      cardNumber: "",
       expires: "",
       year: "",
       cvc: "",
     },
   });
 
+  const connectBankCard = async (
+    country: string,
+    firstName: string,
+    lastName: string,
+    cardNumber: string,
+    expires: string,
+    year: string,
+    cvc: string
+  ) => {
+    try {
+      const res = await fetch("/api/bank-card", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          country: country,
+          firstName: firstName,
+          lastName: lastName,
+          cardNumber: cardNumber,
+          expires: expires,
+          year: year,
+          cvc: cvc,
+          userId: localStorage.getItem("userId"),
+        }),
+      });
+      const jsonData = await res.json();
+      console.log("jsonData", jsonData);
+    } catch (error) {
+      console.error("Error:", error);
+      alert("An error occurred while connecting the bank card.");
+    }
+  };
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    console.log("values", values);
+    connectBankCard(
+      values.country,
+      values.firstName,
+      values.lastName,
+      values.cardNumber,
+      values.expires,
+      values.year,
+      values.cvc
+    );
     router.push("/");
   }
   return (
@@ -134,7 +177,7 @@ export const SecondStep = () => {
 
               <FormField
                 control={form.control}
-                name="about"
+                name="cardNumber"
                 render={({ field }) => (
                   <FormItem className="w-full h-[62px] flex flex-col items-start gap-2 ">
                     <FormLabel>Enter card number</FormLabel>
@@ -157,13 +200,30 @@ export const SecondStep = () => {
                   render={({ field }) => (
                     <FormItem className="w-full">
                       <FormLabel>Expires</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Month"
-                          className="w-full h-[36px] "
-                          {...field}
-                        />
-                      </FormControl>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="w-full h-[36px]">
+                            <SelectValue placeholder="Month" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="01">01</SelectItem>
+                          <SelectItem value="02">02</SelectItem>
+                          <SelectItem value="03">03</SelectItem>
+                          <SelectItem value="04">04</SelectItem>
+                          <SelectItem value="05">05</SelectItem>
+                          <SelectItem value="06">06</SelectItem>
+                          <SelectItem value="07">07</SelectItem>
+                          <SelectItem value="08">08</SelectItem>
+                          <SelectItem value="09">09</SelectItem>
+                          <SelectItem value="10">10</SelectItem>
+                          <SelectItem value="11">11</SelectItem>
+                          <SelectItem value="12">12</SelectItem>
+                        </SelectContent>
+                      </Select>
                       <FormDescription hidden></FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -175,13 +235,29 @@ export const SecondStep = () => {
                   render={({ field }) => (
                     <FormItem className="w-full">
                       <FormLabel>Year</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Year"
-                          className="w-full h-[36px] "
-                          {...field}
-                        />
-                      </FormControl>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="w-full h-[36px]">
+                            <SelectValue placeholder="Year" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="2024">2024</SelectItem>
+                          <SelectItem value="2025">2025</SelectItem>
+                          <SelectItem value="2026">2026</SelectItem>
+                          <SelectItem value="2027">2027</SelectItem>
+                          <SelectItem value="2028">2028</SelectItem>
+                          <SelectItem value="2029">2029</SelectItem>
+                          <SelectItem value="2030">2030</SelectItem>
+                          <SelectItem value="2031">2031</SelectItem>
+                          <SelectItem value="2032">2032</SelectItem>
+                          <SelectItem value="2033">2033</SelectItem>
+                          <SelectItem value="2034">2034</SelectItem>
+                        </SelectContent>
+                      </Select>
                       <FormDescription hidden></FormDescription>
                       <FormMessage />
                     </FormItem>

@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
   Form,
@@ -66,7 +66,7 @@ export const FirstStep = ({
           name: name,
           about: about,
           socialmediaurl: socialmediaurl,
-          // userId: localStorage.getItem
+          userId: localStorage.getItem("userId"),
         }),
       });
 

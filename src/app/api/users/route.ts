@@ -1,14 +1,12 @@
-import { checkUser } from "../../../../back_end/controllers/user.controller";
- import { getUsers } from "../../../../back_end/users";
- 
- export async function GET() {
-   const users = await getUsers();
- 
-   return new Response(JSON.stringify({ data: users }));
- }
- 
- export async function POST(req: Request, res: Response) {
-   const body = await req.json();
-   console.log({ body });
-   return await checkUser({ email: body.email, password: body.password });
- }
+import { NextResponse } from "next/server";
+
+export async function GET() {
+  try {
+  } catch (error) {
+    console.log("error", error);
+    return new Response(
+      JSON.stringify({ error: true, message: "error in getting user" }),
+      { status: 500 }
+    );
+  }
+}

@@ -10,6 +10,7 @@ const SignUpPage = () => {
   const [currentStep, setCurrentStep] = useState<number>(0);
   const FormSteps = [FirstStep, SecondStep][currentStep];
   const [username, setUserName] = useState<string | null>(null);
+
   const signUp = async (email: string, password: string) => {
     try {
       await fetch("/api/sign-up", {

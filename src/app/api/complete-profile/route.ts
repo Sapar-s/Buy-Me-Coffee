@@ -6,16 +6,15 @@ export async function POST(req: Request): Promise<Response> {
     const { avatarimage, name, about, socialmediaurl, userId } =
       await req.json();
 
-    const createProfile = `INSERT INTO "Profile" (avatarimage,name,about,socialmediaurl) VALUES($1, $2, $3, $4) RETURNING *`;
+    const createProfile = `INSERT INTO "Profile" (avatarimage,name,about,socialmediaurl,userid) VALUES($1, $2, $3, $4, $5) RETURNING *`;
 
-    const newProfile = await runQuery(createProfile, [
+    const newProfile = (await runQuery(createProfile, [
       avatarimage,
       name,
       about,
       socialmediaurl,
-    ]);
-
-    console.log("newProfile", newProfile);
+      userId,
+    ])) as { id: number }[]; // Explicitly typing the result
 
     if (!newProfile) {
       return new NextResponse(
@@ -27,9 +26,11 @@ export async function POST(req: Request): Promise<Response> {
       );
     }
 
-    const updateUser = `UPDATE "User" SET Profiles = ${newProfile.id} WHERE  id = ${userId}`;
+    const profileId = (newProfile[0] as { id: number }).id; // Ensuring type safety
 
-    console.log("updateUser", updateUser);
+    const updateUser = `UPDATE "User" SET Profile = $1 WHERE id = $2`;
+
+    await runQuery(updateUser, [profileId, userId]);
 
     return new NextResponse(
       JSON.stringify({

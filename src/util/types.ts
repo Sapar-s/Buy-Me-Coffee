@@ -18,7 +18,7 @@ export type profileType = {
   socialMediaURL: string;
   backgroundImage?: string;
   successMessage?: string;
-  user_id: number;
+  userid: number;
   createdAt?: string;
   updatedAt?: string;
 };

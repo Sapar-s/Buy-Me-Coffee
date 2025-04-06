@@ -51,6 +51,8 @@ const LoginPage = () => {
       });
       const jsonData = await res.json();
 
+      localStorage.setItem("userId", jsonData.user.id);
+
       if (jsonData.error) {
         alert(jsonData.message);
         return;
