@@ -26,7 +26,7 @@ export const useUser = () => {
 const UserProvider = ({ children }: { children: ReactNode }) => {
   const [users, setUsers] = useState<any | null>(null);
 
-  const getUser = async () => {
+  const getUsers = async () => {
     try {
       const res = await fetch("/api/users", {
         method: "GET",
@@ -35,6 +35,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
         },
       });
       const jsonData = await res.json();
+      console.log(jsonData.users);
 
       setUsers(jsonData.data);
 
@@ -50,7 +51,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
-    getUser();
+    getUsers();
   }, []);
 
   return (

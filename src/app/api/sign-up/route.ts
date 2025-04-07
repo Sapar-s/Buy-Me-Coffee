@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 export async function POST(req: Request): Promise<Response> {
   try {
     const { username, email, password } = await req.json();
-    const usernameQuery = `SELECT username FROM "User" WHERE username=$1`;
+    const usernameQuery = `SELECT username FROM "Users" WHERE username=$1`;
 
     const isfoundUser = await runQuery(usernameQuery, [username]);
 
@@ -15,7 +15,7 @@ export async function POST(req: Request): Promise<Response> {
         { status: 500, headers: { "Content-Type": "application/json" } }
       );
 
-    const emailQuery = `select username from "User" where email = $1`;
+    const emailQuery = `select username from "Users" where email = $1`;
     const isfoundEmail = await runQuery(emailQuery, [email]);
 
     if (isfoundEmail.length > 0)
@@ -27,7 +27,7 @@ export async function POST(req: Request): Promise<Response> {
     const hashedPassword = await bcrypt.hash(password, 10);
     console.log("hashed password", hashedPassword);
 
-    const createUser = `INSERT INTO "User" (username, email, password) VALUES ($1, $2, $3)`;
+    const createUser = `INSERT INTO "Users" (username, email, password) VALUES ($1, $2, $3)`;
 
     const newUser = await runQuery(createUser, [
       username,

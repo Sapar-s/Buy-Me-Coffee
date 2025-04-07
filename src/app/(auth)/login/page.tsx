@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import axios from "axios";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -42,19 +43,16 @@ const LoginPage = () => {
 
   const login = async (email: string, password: string) => {
     try {
-      const res = await fetch("/api/sign-in", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email: email, password: password }),
+      const res = await axios.post("/api/sign-in", {
+        email: email,
+        password: password,
       });
-      const jsonData = await res.json();
+      console.log("res", res);
 
-      localStorage.setItem("userId", jsonData.user.id);
+      localStorage.setItem("userId", res.data.user.id);
 
-      if (jsonData.error) {
-        alert(jsonData.message);
+      if (res.data.error) {
+        alert(res.data.message);
         return;
       }
 

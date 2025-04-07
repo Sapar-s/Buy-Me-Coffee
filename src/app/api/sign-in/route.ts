@@ -13,7 +13,7 @@ export async function POST(req: Request): Promise<Response> {
       );
     }
 
-    const getUserQuery = `select * from "User" where email = $1; `;
+    const getUserQuery = `select * from "Users" where email = $1; `;
     const users: userType[] = await runQuery(getUserQuery, [email]);
 
     if (!users || users.length == 0) {

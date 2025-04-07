@@ -6,7 +6,7 @@ export async function POST(req: Request): Promise<Response> {
     const { avatarimage, name, about, socialmediaurl, userId } =
       await req.json();
 
-    const createProfile = `INSERT INTO "Profile" (avatarimage,name,about,socialmediaurl,userid) VALUES($1, $2, $3, $4, $5) RETURNING *`;
+    const createProfile = `INSERT INTO "Profiles" (avatarimage,name,about,socialmediaurl,userid) VALUES($1, $2, $3, $4, $5) RETURNING *`;
 
     const newProfile = (await runQuery(createProfile, [
       avatarimage,
@@ -28,7 +28,7 @@ export async function POST(req: Request): Promise<Response> {
 
     const profileId = (newProfile[0] as { id: number }).id; // Ensuring type safety
 
-    const updateUser = `UPDATE "User" SET Profile = $1 WHERE id = $2`;
+    const updateUser = `UPDATE "Users" SET Profiles = $1 WHERE id = $2`;
 
     await runQuery(updateUser, [profileId, userId]);
 
