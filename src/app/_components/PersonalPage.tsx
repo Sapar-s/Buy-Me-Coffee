@@ -47,7 +47,9 @@ export const PersonalPage = () => {
     },
   });
 
-  const { users } = useUser();
+  const { users } = useUser()!;
+
+  const userId = Number(localStorage.getItem("userId"));
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
@@ -55,17 +57,21 @@ export const PersonalPage = () => {
   return (
     <>
       {users?.map((user) => {
+        if (user.id !== userId) return null;
         return (
-          <div className="w-[632px] flex flex-col items-start gap-5 z-50 bg-background rounded-lg ">
+          <div
+            key={user.id}
+            className="w-[632px] flex flex-col items-start gap-5 z-50 bg-background rounded-lg "
+          >
             <div className="w-full p-6 items-start flex flex-col gap-2 rounded-lg border-border border ">
               <div className="w-full flex items-start justify-between ">
                 <div className="flex items-center gap-3 ">
                   <Avatar>
-                    <AvatarImage src={user.profile.avatarImage} />
+                    <AvatarImage src={user?.profile?.avatarImage} />
                     <AvatarFallback>CN</AvatarFallback>
                   </Avatar>
                   <h4 className="text-[20px] leading-[24px] font-[700] ">
-                    {user.profile.name}
+                    {user?.profile?.name}
                   </h4>
                 </div>
 
@@ -191,10 +197,10 @@ export const PersonalPage = () => {
 
               <div className="flex flex-col items-start gap-3 ">
                 <h4 className="text-[16px] font-[600] leading-[24px] ">
-                  About {user.profile.name}
+                  About {user?.profile?.name}
                 </h4>
                 <p className="text-[14px] font-[400] leading-[20px] w-full ">
-                  {user.profile.about}
+                  {user?.profile?.about}
                 </p>
               </div>
             </div>
@@ -203,7 +209,7 @@ export const PersonalPage = () => {
                 Social media URL
               </h4>
               <p className="font-[400] text-[14px] leading-[20px] w-full ">
-                {user.profile.socialmediaurl}
+                {user?.profile?.socialmediaurl}
               </p>
             </div>
             <div className="w-full flex flex-col items-start p-6 gap-3 rounded-lg border-border border ">
@@ -216,7 +222,7 @@ export const PersonalPage = () => {
                     <Heart />
                   </div>
                   <h4 className="text-[16px] font-[600] leading-[24px text-center] ">
-                    Be the first one to support {user.profile.name}
+                    Be the first one to support {user?.profile?.name}
                   </h4>
                 </div>
               </div>

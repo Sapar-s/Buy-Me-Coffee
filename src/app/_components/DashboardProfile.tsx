@@ -27,7 +27,7 @@ const formSchema = z.object({
   message: z.string().nonempty("Please enter a message"),
 });
 
-export const DashboardProfile = () => {
+export const DashboardProfile = ({ profileId }: { profileId: number }) => {
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

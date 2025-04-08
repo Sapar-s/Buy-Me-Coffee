@@ -11,12 +11,12 @@ const ProfilePage = () => {
   const [currentStep, setCurrentStep] = useState<number>(0);
   const FormSteps = [FirstStep, SecondStep][currentStep];
   const router = useRouter();
-  const { users } = useUser();
-  const userId = localStorage.getItem("userId");
+  const { users } = useUser()!;
+  const userId = Number(localStorage.getItem("userId"));
   return (
     <>
       {users?.map((user) => {
-        return user.id == userId ? (
+        return user?.id == userId ? (
           router.push("/")
         ) : (
           <div key={user.id}>

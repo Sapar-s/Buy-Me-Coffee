@@ -8,7 +8,7 @@ import { ExternalLink, Search } from "lucide-react";
 import Link from "next/link";
 
 const Explore = () => {
-  const { users } = useUser();
+  const { users } = useUser()!;
 
   return (
     <div className="w-[957px] flex flex-col p-6 ">
@@ -45,7 +45,7 @@ const Explore = () => {
                       </h4>
                     </div>
                     <div className="flex flex-col gap-1 items-end w-[258.5px] ">
-                      <Link href={`/view-profile/${user?.profile?.userId}`}>
+                      <Link href={`/view-profile/${user?.id}`}>
                         <Button
                           variant={"secondary"}
                           className="cursor-pointer "

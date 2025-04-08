@@ -8,8 +8,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import React from "react";
+import { useUser } from "../_context/UserContext";
 
 export const RecentTransaction = () => {
+  // const { users } = useUser()!;
   return (
     <div className="w-full flex flex-col gap-3 items-start ">
       <div className="flex w-full justify-between items-start ">
@@ -68,6 +70,7 @@ export const RecentTransaction = () => {
           </SelectContent>
         </Select>
       </div>
+      {}
       <div className="w-full flex flex-col gap-4 p-6 items-start rounded-lg border-[1px] ">
         <div className="p-3 flex flex-col gap-[10px] rounded-lg ">
           <div className="w-full flex flex-col gap-4 items-start ">

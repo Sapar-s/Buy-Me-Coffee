@@ -3,7 +3,7 @@ export type userType = {
   email: string;
   password: string;
   username: string | null;
-  receivedDonations?: receivedDonationsType[];
+  donationsReceived?: receivedDonationsType[];
   profile?: profileType | null;
   bankCard?: BankCardType | null;
   createdAt: Date;
@@ -15,7 +15,7 @@ export type profileType = {
   name: string;
   about: string;
   avatarImage: string;
-  socialMediaURL: string;
+  socialmediaurl: string;
   backgroundImage?: string;
   successMessage?: string;
   userid: number;

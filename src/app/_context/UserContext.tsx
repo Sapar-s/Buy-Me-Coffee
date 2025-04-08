@@ -1,5 +1,6 @@
 "use client";
 
+import { userType } from "@/util/types";
 import {
   createContext,
   ReactNode,
@@ -9,11 +10,7 @@ import {
 } from "react";
 
 type UserContextType = {
-  users: {
-    name: string;
-    email: string;
-    id: string;
-  };
+  users: userType[] | null;
   // signUp: (username: string, email: string, password: string) => void;
 };
 

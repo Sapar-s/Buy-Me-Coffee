@@ -14,12 +14,13 @@ import { Copy } from "lucide-react";
 import { useUser } from "../_context/UserContext";
 
 export const UserProfile = () => {
-  const { users } = useUser();
-
+  const { users } = useUser()!;
+  const userId = Number(localStorage.getItem("userId"));
   console.log("users => ", users);
   return (
     <>
       {users?.map((user) => {
+        if (user.id !== userId) return null;
         return (
           <div
             key={user.id}
@@ -28,15 +29,15 @@ export const UserProfile = () => {
             <div className="w-full flex justify-between items-start ">
               <div className="flex gap-3 items-center ">
                 <Avatar>
-                  <AvatarImage src={user.profile.avatarImage} />
+                  <AvatarImage src={user?.profile?.avatarImage} />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col justify-center items-start gap-1 ">
                   <h4 className="text-[16px] font-[700] leading-[24px] ">
-                    {user.profile.name}
+                    {user?.profile?.name}
                   </h4>
                   <h5 className="text-[14px] font-[400] leading-[20px] ">
-                    {user.profile.socialmediaurl}
+                    {user?.profile?.socialmediaurl}
                   </h5>
                 </div>
               </div>
@@ -67,8 +68,8 @@ export const UserProfile = () => {
               <div className="w-full ">
                 <h1 className="text-[36px] font-[700] leading-[40px] ">
                   $
-                  {user.donationsReceived
-                    ? user.donationsReceived[0].amount
+                  {user?.donationsReceived
+                    ? user?.donationsReceived[0]?.amount
                     : 0}
                 </h1>
               </div>
