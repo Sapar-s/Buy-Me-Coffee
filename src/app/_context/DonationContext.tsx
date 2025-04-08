@@ -7,9 +7,15 @@ import {
   useEffect,
   useState,
 } from "react";
+import axios from "axios";
 
 type UserContextType = {
-  giveDontation: () => void;
+  giveDonation: (
+    amount: string,
+    socialURLOrBuyMeACoffee: string,
+    message: string,
+    profileId: number
+  ) => void;
 };
 
 const donationContext = createContext<UserContextType | null>(null);
@@ -19,8 +25,23 @@ export const useDonation = () => {
 };
 
 const DonationProvider = ({ children }: { children: ReactNode }) => {
-  const giveDontation = async () => {
+  const [donorId, setDonorId] = useState<number>(0);
+  const giveDonation = async (
+    amount: string,
+    socialURLOrBuyMeACoffee: string,
+    message: string,
+    profileId: number
+  ) => {
     try {
+      const response = await axios.post("/api/donation", {
+        amount,
+        socialURLOrBuyMeACoffee,
+        message,
+        profileId,
+        donorId,
+      });
+
+      console.log("response =>", response);
     } catch (error) {
       console.log("error", error);
       alert("error in giving donation");
@@ -28,11 +49,15 @@ const DonationProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
-    giveDontation();
+    const id = localStorage.getItem("userId");
+    if (id) {
+      setDonorId(Number(id));
+    }
+    // giveDonation();
   }, []);
 
   return (
-    <donationContext.Provider value={{ giveDontation: giveDontation }}>
+    <donationContext.Provider value={{ giveDonation: giveDonation }}>
       {children}
     </donationContext.Provider>
   );

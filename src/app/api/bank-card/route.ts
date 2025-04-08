@@ -3,18 +3,10 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request): Promise<Response> {
   try {
-    const {
-      country,
-      firstName,
-      lastName,
-      cardNumber,
-      expires,
-      year,
-      //   cvc,
-      userId,
-    } = await req.json();
+    const { country, firstName, lastName, cardNumber, expires, year, userId } =
+      await req.json();
 
-    const expiryDate = `${year}-${expires}-01`; // Format the expiry date as YYYY-MM-DD
+    const expiryDate = `${year}-${expires}-01`;
 
     const createBankCard = `INSERT INTO "BankCard" (country, firstname, lastname, cardnumber, expirydate, userid) VALUES($1, $2, $3, $4, $5, $6) RETURNING *`;
     const newBankCard = (await runQuery(createBankCard, [
@@ -24,18 +16,7 @@ export async function POST(req: Request): Promise<Response> {
       cardNumber,
       expiryDate,
       userId,
-    ])) as { id: number }[]; // Explicitly typing the result
-
-    // const createBankCard = `INSERT INTO "BankCard" (country, firstname, lastname, cardnumber, expirydate, cvc, userid) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *`;
-    // const newBankCard = (await runQuery(createBankCard, [
-    //   country,
-    //   firstName,
-    //   lastName,
-    //   cardNumber,
-    //   expiryDate,
-    //   cvc,
-    //   userId,
-    // ])) as { id: number }[]; // Explicitly typing the result
+    ])) as { id: number }[];
 
     console.log("newBankCard", newBankCard);
 
@@ -51,7 +32,7 @@ export async function POST(req: Request): Promise<Response> {
 
     const bankCardId = newBankCard[0].id;
 
-    const updateUser = `UPDATE "User" SET BankCard = $1 WHERE id = $2`;
+    const updateUser = `UPDATE "Users" SET BankCard = $1 WHERE id = $2`;
 
     await runQuery(updateUser, [bankCardId, userId]);
 

@@ -12,10 +12,19 @@ import {
 
 import { Copy } from "lucide-react";
 import { useUser } from "../_context/UserContext";
+import { useEffect, useState } from "react";
 
 export const UserProfile = () => {
+  const [userId, setUserId] = useState<number | null>(null);
   const { users } = useUser()!;
-  const userId = Number(localStorage.getItem("userId"));
+
+  useEffect(() => {
+    const id = Number(localStorage.getItem("userId"));
+    if (id) {
+      setUserId(id);
+    }
+  }, [users]);
+
   console.log("users => ", users);
   return (
     <>

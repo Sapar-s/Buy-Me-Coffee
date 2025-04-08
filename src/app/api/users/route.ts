@@ -55,8 +55,6 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
     const users = await runQuery(getAllUsers);
 
-    console.log("users", users);
-
     if (!Array.isArray(users) || users.length === 0) {
       return new NextResponse(JSON.stringify({ message: "User not found" }), {
         status: 404,

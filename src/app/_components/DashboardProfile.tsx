@@ -20,20 +20,22 @@ import { Textarea } from "@/components/ui/textarea";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Coffee } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useDonation } from "../_context/DonationContext";
 
 const formSchema = z.object({
   amount: z.string().nonempty("Please select an amount"),
-  url: z.string().nonempty("Please enter a valid URL"),
+  socialURLOrBuyMeACoffee: z.string().nonempty("Please enter a valid URL"),
   message: z.string().nonempty("Please enter a message"),
 });
 
 export const DashboardProfile = ({ profileId }: { profileId: number }) => {
+  const { giveDonation } = useDonation()!;
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       amount: "",
-      url: "",
+      socialURLOrBuyMeACoffee: "",
       message: "",
     },
   });
@@ -42,6 +44,13 @@ export const DashboardProfile = ({ profileId }: { profileId: number }) => {
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
+    giveDonation(
+      values.amount,
+      values.socialURLOrBuyMeACoffee,
+      values.message,
+      profileId
+    );
+
     console.log(values);
   }
 
@@ -131,7 +140,7 @@ export const DashboardProfile = ({ profileId }: { profileId: number }) => {
           <div className="w-full flex items-start gap-5 flex-col ">
             <FormField
               control={form.control}
-              name="url"
+              name="socialURLOrBuyMeACoffee"
               render={({ field }) => (
                 <FormItem className="w-full">
                   <FormLabel>Enter BuyMeCoffee or social acount URL:</FormLabel>
