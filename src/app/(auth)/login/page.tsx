@@ -57,7 +57,10 @@ const LoginPage = () => {
       }
 
       router.push("/profile");
-    } catch (error) {}
+    } catch (error) {
+      console.log("error", error);
+      alert("error in login function");
+    }
   };
 
   useEffect(() => {

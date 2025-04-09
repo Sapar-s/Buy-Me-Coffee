@@ -4,6 +4,7 @@ import { useUser } from "@/app/_context/UserContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { userType } from "@/util/types";
 import { ExternalLink, Search } from "lucide-react";
 import Link from "next/link";
 
@@ -26,7 +27,7 @@ const Explore = () => {
           </div>
         </div>
         {users ? (
-          users?.map((user: any, index: number) => {
+          users?.map((user: userType, index: number) => {
             return (
               <div
                 key={index}
@@ -36,12 +37,12 @@ const Explore = () => {
                   <div className="w-full flex justify-between items-center ">
                     <div className="flex gap-3 items-center ">
                       <Avatar>
-                        <AvatarImage src={user.profile.avatarImage} />
+                        <AvatarImage src={user.profile?.avatarImage} />
                         <AvatarFallback>CN</AvatarFallback>
                       </Avatar>
 
                       <h4 className="text-[20px] font-[600] leading-[28px] ">
-                        {user.profile.name}
+                        {user.profile?.name}
                       </h4>
                     </div>
                     <div className="flex flex-col gap-1 items-end w-[258.5px] ">
@@ -58,10 +59,10 @@ const Explore = () => {
                   <div className="flex items-start gap-5 w-full justify-between ">
                     <div className="flex flex-col gap-2 items-start w-full ">
                       <h4 className="text-[16px] font-[600] leading-[24px] w-full ">
-                        About {user.profile.name}
+                        About {user.profile?.name}
                       </h4>
                       <p className="text-[14px] font-[400] leading-[20px] w-full ">
-                        {user.profile.about}
+                        {user.profile?.about}
                       </p>
                     </div>
                     <div className="flex flex-col gap-2 items-start w-full ">
@@ -69,7 +70,7 @@ const Explore = () => {
                         Social media URL
                       </h4>
                       <h5 className="text-[14px] font-[400] leading-[20px] w-full ">
-                        {user.profile.socialmediaurl}
+                        {user.profile?.socialmediaurl}
                       </h5>
                     </div>
                   </div>

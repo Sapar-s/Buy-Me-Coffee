@@ -28,6 +28,7 @@ export const UserProfile = () => {
       alert("Амжилттай хууллаа!");
     } catch (err) {
       alert("Хуулахад алдаа гарлаа");
+      console.log("err", err);
     }
   };
 

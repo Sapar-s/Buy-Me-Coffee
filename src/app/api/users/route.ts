@@ -1,7 +1,7 @@
 import { runQuery } from "@/util/queryService";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest): Promise<NextResponse> {
+export async function GET(): Promise<NextResponse> {
   try {
     const getAllUsers = `
     SELECT 
@@ -67,8 +67,11 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       status: 200,
     });
   } catch (error) {
-    return new NextResponse(JSON.stringify({ error: "aldaa garlaa" }), {
-      status: 500,
-    });
+    return new NextResponse(
+      JSON.stringify({ message: "aldaa garlaa", error }),
+      {
+        status: 500,
+      }
+    );
   }
 }

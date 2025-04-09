@@ -21,7 +21,7 @@ export const useUser = () => {
 };
 
 const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [users, setUsers] = useState<any | null>(null);
+  const [users, setUsers] = useState<userType[] | null>(null);
 
   const getUsers = async () => {
     try {

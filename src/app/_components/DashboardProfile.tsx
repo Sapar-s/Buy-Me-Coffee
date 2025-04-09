@@ -21,7 +21,6 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Coffee, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useDonation } from "../_context/DonationContext";
-import { useState } from "react";
 
 const formSchema = z.object({
   amount: z.string().nonempty("Please select an amount"),
