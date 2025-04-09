@@ -3,7 +3,7 @@ import { getClient } from "./db";
 
 export async function runQuery<T>(
   query: string,
-  params: any[] = []
+  params: unknown[] = []
 ): Promise<T[]> {
   const client: Client = getClient();
   try {
