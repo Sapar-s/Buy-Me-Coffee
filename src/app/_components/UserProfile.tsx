@@ -18,6 +18,19 @@ export const UserProfile = () => {
   const [userId, setUserId] = useState<number | null>(null);
   const { users } = useUser()!;
 
+  const handleCopy = async (socialmediaurl: string | undefined) => {
+    if (!socialmediaurl) {
+      alert("Url baihgui bn");
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(socialmediaurl);
+      alert("Амжилттай хууллаа!");
+    } catch (err) {
+      alert("Хуулахад алдаа гарлаа");
+    }
+  };
+
   useEffect(() => {
     const id = Number(localStorage.getItem("userId"));
     if (id) {
@@ -50,7 +63,10 @@ export const UserProfile = () => {
                   </h5>
                 </div>
               </div>
-              <Button className="gap-2 h-10 flex ">
+              <Button
+                onClick={() => handleCopy(user?.profile?.socialmediaurl)}
+                className="gap-2 h-10 flex cursor-pointer "
+              >
                 <Copy />
                 <p>Share page link</p>
               </Button>
@@ -77,8 +93,8 @@ export const UserProfile = () => {
               <div className="w-full ">
                 <h1 className="text-[36px] font-[700] leading-[40px] ">
                   $
-                  {user?.donationsReceived
-                    ? user?.donationsReceived[0]?.amount
+                  {user?.donationsreceived
+                    ? user?.donationsreceived[0]?.amount
                     : 0}
                 </h1>
               </div>

@@ -18,9 +18,10 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { Coffee } from "lucide-react";
+import { Coffee, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useDonation } from "../_context/DonationContext";
+import { useState } from "react";
 
 const formSchema = z.object({
   amount: z.string().nonempty("Please select an amount"),
@@ -29,7 +30,8 @@ const formSchema = z.object({
 });
 
 export const DashboardProfile = ({ profileId }: { profileId: number }) => {
-  const { giveDonation } = useDonation()!;
+  const { giveDonation, loading } = useDonation()!;
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -52,6 +54,7 @@ export const DashboardProfile = ({ profileId }: { profileId: number }) => {
     );
 
     console.log(values);
+    form.reset();
   }
 
   return (
@@ -172,8 +175,18 @@ export const DashboardProfile = ({ profileId }: { profileId: number }) => {
             />
           </div>
 
-          <Button className="w-full h-10 " type="submit">
-            Support
+          <Button
+            disabled={loading}
+            className="w-full h-10 cursor-pointer "
+            type="submit"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="animate-spin" /> Loading...
+              </>
+            ) : (
+              " Support"
+            )}
           </Button>
         </form>
       </Form>

@@ -28,7 +28,9 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
           json_build_object(
             'id', d1.id,
             'amount', d1.amount,
-            'message', d1.specialMessage
+            'message', d1.specialMessage,
+            'socialurlorbuymeacoffee', d1.socialurlorbuymeacoffee,
+            'donorid', d1.donorid
           )
         )
         FROM "Donation" d1

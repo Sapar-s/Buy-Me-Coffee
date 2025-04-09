@@ -3,7 +3,7 @@ export type userType = {
   email: string;
   password: string;
   username: string | null;
-  donationsReceived?: receivedDonationsType[];
+  donationsreceived?: receivedDonationsType[];
   profile?: profileType | null;
   bankCard?: BankCardType | null;
   createdAt: Date;
@@ -39,7 +39,9 @@ export type BankCardType = {
 export type receivedDonationsType = {
   id: number;
   amount: number;
-  specialMessage: string;
-  socialMediaURLOrBuyMeCoffee: string;
-  donorId: number;
+  specialmessage: string;
+  avatarimage: string;
+  socialmediaurl: string;
+  name: string;
+  donorid: number;
 };
