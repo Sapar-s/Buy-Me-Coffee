@@ -73,8 +73,6 @@ export async function GET(req: Request): Promise<Response> {
     const getAllDonations = `SELECT * FROM "Donation" INNER JOIN "Profile" ON "Donation"."donorid" = "Profile"."userid" WHERE "Donation".recipientid = $1;`;
     const donations = await runQuery(getAllDonations, [userId]);
 
-    console.log("dfonnn", donations);
-
     // if (!Array.isArray(donations) || donations.length === 0) {
     //   return new NextResponse(
     //     JSON.stringify({ message: "No donations found" }),

@@ -29,6 +29,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useUser } from "../_context/UserContext";
 import { useEffect, useState } from "react";
+import { useDonation } from "../_context/DonationContext";
 
 const formSchema = z.object({
   photo: z.string().nonempty("Зураг заавал шаардлагатай"),
@@ -49,6 +50,7 @@ export const PersonalPage = () => {
   });
 
   const { users } = useUser()!;
+  const { donationsInfo } = useDonation()!;
   const [userId, setUserId] = useState<number | null>(null);
 
   useEffect(() => {
@@ -66,7 +68,7 @@ export const PersonalPage = () => {
         return (
           <div
             key={user.id}
-            className="w-[632px] flex flex-col items-start gap-5 z-50 bg-background rounded-lg "
+            className="w-[632px] flex flex-col mb-10 items-start gap-5 z-50 bg-background rounded-lg "
           >
             <div className="w-full p-6 items-start flex flex-col gap-2 rounded-lg border-border border ">
               <div className="w-full flex items-start justify-between ">
@@ -221,16 +223,47 @@ export const PersonalPage = () => {
               <h4 className="text-[16px] font-[600] leading-[24px] w-full ">
                 Recent Supporters
               </h4>
-              <div className="w-full flex flex-col items-center p-6 gap-6 rounded-lg border-border border ">
-                <div className="w-[385px] flex flex-col items-center gap-1  ">
-                  <div>
-                    <Heart />
+              {donationsInfo?.length === 0 ? (
+                <div className="w-full flex flex-col items-center p-6 gap-6 rounded-lg border-border border ">
+                  <div className="w-[385px] flex flex-col items-center gap-1  ">
+                    <div>
+                      <Heart />
+                    </div>
+                    <h4 className="text-[16px] font-[600] leading-[24px text-center] ">
+                      Be the first one to support {user?.profile?.name}
+                    </h4>
                   </div>
-                  <h4 className="text-[16px] font-[600] leading-[24px text-center] ">
-                    Be the first one to support {user?.profile?.name}
-                  </h4>
                 </div>
-              </div>
+              ) : (
+                <div className="w-full flex flex-col gap-4 items-start ">
+                  {donationsInfo?.map((donation, index) => {
+                    return (
+                      <div
+                        key={index}
+                        className="w-full flex items-start gap-3 "
+                      >
+                        <div>
+                          <Avatar className="w-10 h-10 ">
+                            <AvatarImage src={donation.avatarimage} />
+                            <AvatarFallback>CN</AvatarFallback>
+                          </Avatar>
+                        </div>
+                        <div className="w-full flex flex-col items-start gap-3 ">
+                          <h4 className="text-[14px] font-[650] leading-[20px] text-[#000] ">
+                            {donation.name}{" "}
+                            <span className="text-[14px] font-[500] leading-[20px] text-foreground ">
+                              bought ${donation.amount} coffee
+                            </span>
+                          </h4>
+                          <h4 className="text-[14px] font-[400] leading-[20px] ">
+                            {donation.specialmessage}
+                          </h4>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
         );

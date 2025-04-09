@@ -61,7 +61,7 @@ export const DashboardProfile = ({ profileId }: { profileId: number }) => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="w-[628px] flex flex-col items-start gap-8 p-6 bg-background rounded-lg border-border border z-50 "
+          className="w-[628px] h-[510px] flex flex-col items-start gap-8 p-6 bg-background rounded-lg border-border border z-50 "
         >
           <div className="w-full flex items-start flex-col gap-6 ">
             <h3 className="text-[24px] font-[600] leading-[32px] ">
