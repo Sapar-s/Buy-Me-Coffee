@@ -28,6 +28,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useUser } from "../_context/UserContext";
+import { useEffect, useState } from "react";
 
 const formSchema = z.object({
   photo: z.string().nonempty("Зураг заавал шаардлагатай"),
@@ -48,8 +49,12 @@ export const PersonalPage = () => {
   });
 
   const { users } = useUser()!;
+  const [userId, setUserId] = useState<number | null>(null);
 
-  const userId = Number(localStorage.getItem("userId"));
+  useEffect(() => {
+    const value = Number(localStorage.getItem("userId"));
+    setUserId(value);
+  }, []);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
