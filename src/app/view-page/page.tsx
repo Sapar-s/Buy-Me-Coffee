@@ -10,7 +10,7 @@ const Page = () => {
       <AddCoverImg />
       <div className="w-screen px-[80px] flex gap-5 justify-center mt-[-86px] ">
         <PersonalPage />
-        <DashboardProfile />
+        <DashboardProfile profileId={0} />
       </div>
     </div>
   );
