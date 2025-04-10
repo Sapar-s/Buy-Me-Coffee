@@ -9,10 +9,18 @@ import {
   useEffect,
   useState,
 } from "react";
+import { toast } from "sonner";
 
 type UserContextType = {
   users: userType[] | null;
-  // signUp: (username: string, email: string, password: string) => void;
+  changeProfile: (
+    avatarImage: string,
+    name: string,
+    about: string,
+    URL: string,
+    id: number
+  ) => void;
+  logedUser: userType | null;
 };
 
 const userContext = createContext<UserContextType | null>(null);
@@ -23,6 +31,7 @@ export const useUser = () => {
 
 const UserProvider = ({ children }: { children: ReactNode }) => {
   const [users, setUsers] = useState<userType[] | null>(null);
+  const [logedUser, setLogedUser] = useState<userType | null>(null);
   const pathname = usePathname();
 
   const getUsers = async () => {
@@ -47,12 +56,52 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const changeProfile = async (
+    avatarImage: string,
+    name: string,
+    about: string,
+    URL: string,
+    id: number
+  ) => {
+    const response = await fetch("/api/complete-profile", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        avatarImage,
+        name,
+        about,
+        socialMediaURL: URL,
+        id,
+      }),
+    });
+    const data = await response.json();
+    if (data.error) {
+      toast.error(data.error);
+    } else {
+      toast.success("amjilttai soligdloo");
+    }
+    getUsers();
+  };
+
   useEffect(() => {
     getUsers();
+    const storedUserId = localStorage.getItem("userId");
+    if (storedUserId && users) {
+      const user = users.find((u) => u.id === Number(storedUserId));
+      if (user) setLogedUser(user);
+    }
   }, [pathname]);
 
   return (
-    <userContext.Provider value={{ users: users }}>
+    <userContext.Provider
+      value={{
+        users: users,
+        changeProfile: changeProfile,
+        logedUser: logedUser,
+      }}
+    >
       {children}
     </userContext.Provider>
   );

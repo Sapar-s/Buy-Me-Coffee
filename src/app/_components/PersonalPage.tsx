@@ -1,7 +1,7 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Heart } from "lucide-react";
+import { Camera, Heart } from "lucide-react";
 
 import {
   Dialog,
@@ -30,6 +30,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useUser } from "../_context/UserContext";
 import { useEffect, useState } from "react";
 import { useDonation } from "../_context/DonationContext";
+import Image from "next/image";
 
 const formSchema = z.object({
   photo: z.string().nonempty("Зураг заавал шаардлагатай"),
@@ -41,26 +42,80 @@ const formSchema = z.object({
 export const PersonalPage = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      photo: "",
-      name: "",
-      about: "",
-      url: "",
-    },
   });
 
   const { users } = useUser()!;
   const { donationsInfo } = useDonation()!;
   const [userId, setUserId] = useState<number | null>(null);
+  const [image, setImage] = useState<string | null>(null);
+  const [currentUser, setCurrentUser] = useState<any>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const tempImageUrl = URL.createObjectURL(file);
+    setImage(tempImageUrl);
+    form.setValue("photo", tempImageUrl); // Зураг path-г хадгалах
+  };
+
+  console.log("users", users);
 
   useEffect(() => {
     const value = Number(localStorage.getItem("userId"));
     setUserId(value);
   }, []);
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  useEffect(() => {
+    if (!userId || !users) return;
+    const foundUser = users.find((u) => u.id === userId);
+    if (foundUser && foundUser.profile) {
+      const profile = foundUser.profile;
+      form.reset({
+        photo: profile.avatarImage ?? "",
+        name: profile.name ?? "",
+        about: profile.about ?? "",
+        url: profile.socialmediaurl ?? "",
+      });
+      setImage(profile.avatarImage ?? null);
+      setCurrentUser(foundUser);
+    }
+  }, [userId, users, form]);
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (!currentUser || !userId) return;
+
+    const profile = {
+      name: values.name,
+      about: values.about,
+      socialmediaurl: values.url,
+      avatarImage: values.photo,
+    };
+
+    const updateData = {
+      userId,
+      profile,
+    };
+
+    console.log("updateData before PUT:", updateData);
+
+    try {
+      const res = await fetch("/api/complete-profile", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updateData),
+      });
+
+      if (!res.ok) throw new Error("Алдаа гарлаа!");
+
+      alert("Профайл амжилттай шинэчлэгдлээ!");
+    } catch (err) {
+      console.error("❌ Update error:", err);
+      alert("Шинэчлэх үед алдаа гарлаа!");
+    }
   }
+
   return (
     <>
       {users?.map((user) => {
@@ -106,11 +161,45 @@ export const PersonalPage = () => {
                             <FormItem className="flex flex-col gap-3 items-start ">
                               <FormLabel>Add photo</FormLabel>
                               <FormControl>
-                                <Input
-                                  type="file"
-                                  className="w-40 h-40 rounded-full border-[2px] border-dashed "
-                                  {...field}
-                                />
+                                {image ? (
+                                  <div className="relative ">
+                                    <Image
+                                      alt="Profile"
+                                      src={image}
+                                      height={160}
+                                      width={160}
+                                      className="w-40 h-40 rounded-full bg-cover bg-center "
+                                    />
+                                    {/* <Camera className="text-gray-300 h-[28px] absolute top-[67px] left-[67px] z-40 w-[28px]" /> */}
+                                    <label
+                                      {...field}
+                                      htmlFor="photo"
+                                      className="w-[28px] h-[28px] absolute top-[67px] left-[67px]  cursor-pointer  flex items-center justify-center "
+                                    >
+                                      <Camera className="text-gray-300 h-[28px] z-40 w-[28px]" />
+                                      <Input
+                                        type="file"
+                                        id="photo"
+                                        className="hidden"
+                                        onChange={handleFileChange}
+                                      />
+                                    </label>
+                                  </div>
+                                ) : (
+                                  <label
+                                    {...field}
+                                    htmlFor="photo"
+                                    className="w-40 h-40 rounded-full cursor-pointer border-[2px] border-dashed flex items-center justify-center "
+                                  >
+                                    <Camera className="text-gray-300 h-[28px] z-40 w-[28px]" />
+                                    <Input
+                                      type="file"
+                                      id="photo"
+                                      className="hidden"
+                                      onChange={handleFileChange}
+                                    />
+                                  </label>
+                                )}
                               </FormControl>
                               <FormDescription hidden></FormDescription>
                               <FormMessage />

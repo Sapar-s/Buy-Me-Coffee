@@ -99,13 +99,6 @@ export const FirstStep = ({
     setImage(temImageUrl);
     form.setValue("image", "uploaded");
   };
-
-  // const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = event.target.files?.[0];
-  //   if (file) {
-  //     setImage(URL.createObjectURL(file));
-  //   }
-  // };
   return (
     <div>
       <div className="">
