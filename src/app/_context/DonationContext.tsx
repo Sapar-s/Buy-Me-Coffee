@@ -11,6 +11,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 import { receivedDonationsType } from "@/util/types";
+import { usePathname } from "next/navigation";
 
 type UserContextType = {
   giveDonation: (
@@ -21,6 +22,7 @@ type UserContextType = {
   ) => void;
   loading: boolean;
   donationsInfo: receivedDonationsType[] | null;
+  getDonationInfo: (userId: number) => void;
 };
 
 const donationContext = createContext<UserContextType | null>(null);
@@ -33,6 +35,7 @@ const DonationProvider = ({ children }: { children: ReactNode }) => {
   const [donorId, setDonorId] = useState<number>(0);
   const [loading, setLoading] = useState(false);
   const [donationsInfo, setDonationsInfo] = useState(null);
+  const pathname = usePathname();
 
   const giveDonation = async (
     amount: string,
@@ -50,7 +53,6 @@ const DonationProvider = ({ children }: { children: ReactNode }) => {
         donorId,
       });
 
-      console.log("response =>", response);
       toast.success(response.data.message);
     } catch (error) {
       console.log("error", error);
@@ -60,12 +62,11 @@ const DonationProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const getDonationInfo = async (userId: string) => {
+  const getDonationInfo = async (userId: number) => {
     try {
       const res = await axios.get(`/api/donation?userId=${userId}`);
       const jsonData = await res.data;
       setDonationsInfo(jsonData);
-      console.log("jsonData in get donation info=> ", jsonData);
     } catch (error) {
       console.log("error", error);
       alert("error in getting donation info");
@@ -76,9 +77,9 @@ const DonationProvider = ({ children }: { children: ReactNode }) => {
     const id = localStorage.getItem("userId");
     if (id) {
       setDonorId(Number(id));
-      getDonationInfo(id);
+      getDonationInfo(Number(id));
     }
-  }, []);
+  }, [pathname]);
 
   return (
     <donationContext.Provider
@@ -86,6 +87,7 @@ const DonationProvider = ({ children }: { children: ReactNode }) => {
         giveDonation: giveDonation,
         loading: loading,
         donationsInfo: donationsInfo,
+        getDonationInfo: getDonationInfo,
       }}
     >
       {children}

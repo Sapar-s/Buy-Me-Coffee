@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { uploadImage } from "@/lib/handle-upload";
 import { Camera, X } from "lucide-react";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 
 export const AddCoverImg = () => {
@@ -14,30 +14,31 @@ export const AddCoverImg = () => {
   const [backgroundImageFile, setBackgroundImageFile] = useState<File | null>(
     null
   );
-  // const [dataBaseImages, setDataBaseImages] = useState<any[]>([]);
+
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
     setBackgroundImageFile(file);
-    setImage(URL.createObjectURL(file));
+    setPreviewImage(URL.createObjectURL(file)); // previewImage болгож хадгална
   };
 
   useEffect(() => {
     const id = localStorage.getItem("userId");
     setUserId(Number(id));
     getBackgroundImage(id);
-  }, []);
+  }, [image]);
 
   const completeBackCover = async () => {
     const imageURL = await uploadImage(backgroundImageFile);
     try {
-      const res = await axios.post("/api/coverImage", {
+      await axios.post("/api/coverImage", {
         imageURL: imageURL,
         userId: userId,
       });
 
-      console.log("res", res.data);
       alert("Амжилттай зураг нэмэгдлээ!");
       getBackgroundImage(localStorage.getItem("userId"));
       setBackgroundImageFile(null);
@@ -58,74 +59,106 @@ export const AddCoverImg = () => {
         setImage(null);
         // setDataBaseImages([]);
       }
-      console.log("Database images", images);
-      console.log("Response", response.data);
     } catch (error) {
       console.log("error", error);
       alert("Database-аас зураг авахад алдаа гарлаа!");
     }
   };
 
+  const changeCoverHandler = async (userId: number | null) => {
+    if (!backgroundImageFile) {
+      alert("Шинэ зураг сонгогдоогүй байна!");
+      return;
+    }
+
+    const imageURL = await uploadImage(backgroundImageFile);
+
+    try {
+      const response = await axios.put(`/api/coverImage`, {
+        userId: userId,
+        imageURL: imageURL,
+      });
+
+      console.log("response => ", response);
+      alert("Зураг амжилттай солигдлоо!");
+
+      // UI-г шинэчлэх
+      getBackgroundImage(String(userId));
+
+      // File input state-г цэвэрлэх
+      setBackgroundImageFile(null);
+    } catch (error) {
+      console.log("error", error);
+      alert("Change Cover Handler алдаа гарлаа!");
+    }
+  };
+
   const isNewImageSelected = backgroundImageFile !== null;
 
   const deleteImage = () => {
-    setImage(null);
     setBackgroundImageFile(null);
+    setPreviewImage(null);
   };
 
   return (
     <>
-      {image ? (
-        <div className="w-full relative ">
-          <Image
-            alt="Cover image"
-            src={image}
-            height={319}
-            width={1000}
-            className="w-full h-[319px]"
-          />
-          {isNewImageSelected ? (
-            <div className="absolute top-4 right-20 flex gap-3 ">
-              <Button
-                onClick={completeBackCover}
-                variant={"default"}
-                className="text-[14px] h-10 cursor-pointer"
-              >
-                Save changes
-              </Button>
-              <Button
-                variant={"secondary"}
-                onClick={deleteImage}
-                className="cursor-pointer text-[14px] h-10"
-              >
-                Cancel
-              </Button>
-            </div>
-          ) : (
-            <Button
-              variant={"default"}
-              className="text-[14px] h-10 cursor-pointer absolute top-4 right-20"
-            >
-              <Camera className="w-4 h-4" /> Change cover
-            </Button>
-          )}
-        </div>
-      ) : (
-        <div className="w-full h-[319px] bg-secondary flex items-center justify-center">
-          <label
-            htmlFor="coverImage"
-            className="flex items-center justify-center gap-2 py-2 px-4 rounded-md cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-200 text-[14px] font-[500]"
-          >
-            <Camera className="w-4 h-4" /> Add a cover image
-            <Input
-              id="coverImage"
-              onChange={handleFileChange}
-              className="hidden"
-              type="file"
+      <>
+        {image || previewImage ? (
+          <div className="w-full relative">
+            <Image
+              alt="Cover image"
+              src={previewImage || image!}
+              height={319}
+              width={1000}
+              className="w-full h-[319px]"
             />
-          </label>
-        </div>
-      )}
+            {isNewImageSelected ? (
+              <div className="absolute top-4 right-20 flex gap-3">
+                <Button
+                  onClick={() => changeCoverHandler(userId)}
+                  variant={"default"}
+                  className="text-[14px] h-10 cursor-pointer"
+                >
+                  Save changes
+                </Button>
+                <Button
+                  variant={"secondary"}
+                  onClick={deleteImage}
+                  className="cursor-pointer text-[14px] h-10"
+                >
+                  Cancel
+                </Button>
+              </div>
+            ) : (
+              <Button
+                variant={"default"}
+                onClick={() => inputRef.current?.click()}
+                className="text-[14px] h-10 cursor-pointer absolute top-4 right-20"
+              >
+                <Camera className="w-4 h-4" /> Change cover
+              </Button>
+            )}
+          </div>
+        ) : (
+          <div className="w-full h-[319px] bg-secondary flex items-center justify-center">
+            <label
+              htmlFor="coverImage"
+              className="flex items-center justify-center gap-2 py-2 px-4 rounded-md cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-200 text-[14px] font-[500]"
+            >
+              <Camera className="w-4 h-4" /> Add a cover image
+            </label>
+          </div>
+        )}
+
+        {/* Энэ input аль ч тохиолдолд байж байх ёстой */}
+        <Input
+          id="coverImage"
+          onChange={handleFileChange}
+          className="hidden"
+          type="file"
+          ref={inputRef}
+        />
+      </>
     </>
   );
 };

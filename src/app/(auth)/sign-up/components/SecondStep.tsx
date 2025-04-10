@@ -15,6 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useEffect, useState } from "react";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -38,6 +39,7 @@ export const SecondStep = ({
   signUp: (email: string, password: string) => void;
 }) => {
   const [userName, setUserName] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -47,8 +49,10 @@ export const SecondStep = ({
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    setLoading(true);
     await signUp(values.email, values.password);
     console.log(values);
+    setLoading(false);
   }
 
   useEffect(() => {
@@ -108,7 +112,11 @@ export const SecondStep = ({
                     Password
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter username here" {...field} />
+                    <Input
+                      type="password"
+                      placeholder="Enter username here"
+                      {...field}
+                    />
                   </FormControl>
                 </div>
 
@@ -120,10 +128,17 @@ export const SecondStep = ({
           <div className="flex items-start gap-[10px] px-[24px] pb-[24px] w-full ">
             <Button
               type="submit"
+              disabled={loading}
               variant="default"
               className="w-full cursor-pointer h-10"
             >
-              Continue
+              {loading ? (
+                <>
+                  <Loader2 className="animate-spin" /> Loading...
+                </>
+              ) : (
+                " Continue"
+              )}
             </Button>
           </div>
         </form>

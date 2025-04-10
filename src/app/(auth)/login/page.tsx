@@ -18,7 +18,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -27,7 +28,7 @@ const formSchema = z.object({
 
 const LoginPage = () => {
   const router = useRouter();
-  const [userName, setUserName] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -42,12 +43,12 @@ const LoginPage = () => {
   }
 
   const login = async (email: string, password: string) => {
+    setLoading(true);
     try {
       const res = await axios.post("/api/sign-in", {
         email: email,
         password: password,
       });
-      console.log("res", res);
 
       localStorage.setItem("userId", res.data.user.id);
 
@@ -60,13 +61,10 @@ const LoginPage = () => {
     } catch (error) {
       console.log("error", error);
       alert("error in login function");
+    } finally {
+      setLoading(false);
     }
   };
-
-  useEffect(() => {
-    const getUserName = localStorage.getItem("userName");
-    setUserName(getUserName);
-  }, []);
 
   return (
     <div className="w-full h-screen flex items-center justify-center ">
@@ -85,7 +83,7 @@ const LoginPage = () => {
         >
           <div className="flex flex-col items-start p-6  ">
             <h3 className="text-[24px] font-[600] leading-[32px] w-full ">
-              Welcome, {userName}
+              Welcome back
             </h3>
           </div>
           <FormField
@@ -117,7 +115,11 @@ const LoginPage = () => {
                     Password
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter password here" {...field} />
+                    <Input
+                      type="password"
+                      placeholder="Enter password here"
+                      {...field}
+                    />
                   </FormControl>
                 </div>
 
@@ -128,11 +130,18 @@ const LoginPage = () => {
           />
           <div className="flex items-start gap-[10px] px-[24px] pb-[24px] w-full ">
             <Button
+              disabled={loading}
               type="submit"
               variant="default"
               className="w-full cursor-pointer h-10"
             >
-              Continue
+              {loading ? (
+                <>
+                  <Loader2 className="animate-spin" /> Loading...
+                </>
+              ) : (
+                " Continue"
+              )}
             </Button>
           </div>
         </form>

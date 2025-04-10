@@ -24,6 +24,8 @@ import {
 } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
 import { CountryDropdown } from "@/components/ui/country-dropdown";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   country: z.string().nonempty("Please select country"),
@@ -37,6 +39,7 @@ const formSchema = z.object({
 
 export const SecondStep = () => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -59,6 +62,7 @@ export const SecondStep = () => {
     year: string,
     cvc: string
   ) => {
+    setLoading(true);
     try {
       const res = await fetch("/api/bank-card", {
         method: "POST",
@@ -81,6 +85,8 @@ export const SecondStep = () => {
     } catch (error) {
       console.error("Error:", error);
       alert("An error occurred while connecting the bank card.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -284,8 +290,18 @@ export const SecondStep = () => {
               </div>
             </div>
             <div className="flex w-full justify-end mt-6 ">
-              <Button className="w-[246px] h-10 cursor-pointer " type="submit">
-                Continue
+              <Button
+                disabled={loading}
+                className="w-[246px] h-10 cursor-pointer "
+                type="submit"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="animate-spin" /> Loading...
+                  </>
+                ) : (
+                  " Continue"
+                )}
               </Button>
             </div>
           </form>

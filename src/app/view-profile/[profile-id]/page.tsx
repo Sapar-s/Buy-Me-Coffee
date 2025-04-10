@@ -18,7 +18,7 @@ const ViewProfile = () => {
   return (
     <div>
       <Header />
-      <CoverImg />
+      <CoverImg profileId={profileId} />
       <div className="w-screen px-[80px] flex gap-5 justify-center mt-[-86px] ">
         <SupporterPage profileId={profileId} />
         <DashboardProfile profileId={profileId} />

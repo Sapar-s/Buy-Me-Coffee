@@ -1,6 +1,7 @@
 "use client";
 
 import { userType } from "@/util/types";
+import { usePathname } from "next/navigation";
 import {
   createContext,
   ReactNode,
@@ -22,6 +23,7 @@ export const useUser = () => {
 
 const UserProvider = ({ children }: { children: ReactNode }) => {
   const [users, setUsers] = useState<userType[] | null>(null);
+  const pathname = usePathname();
 
   const getUsers = async () => {
     try {
@@ -32,11 +34,9 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
         },
       });
       const jsonData = await res.json();
-      console.log("jsonData=>", jsonData);
 
       setUsers(jsonData);
 
-      // console.log("get user jsonData", jsonData);
       if (jsonData.error) {
         alert(jsonData.message);
         return;
@@ -49,7 +49,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     getUsers();
-  }, []);
+  }, [pathname]);
 
   return (
     <userContext.Provider value={{ users: users }}>

@@ -39,7 +39,6 @@ export const UserProfile = () => {
     }
   }, [users]);
 
-  console.log("users => ", users);
   return (
     <>
       {users?.map((user) => {

@@ -66,7 +66,11 @@ export const SetNewPass = () => {
                 <FormItem className="w-full">
                   <FormLabel>New password</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter new password" {...field} />
+                    <Input
+                      type="password"
+                      placeholder="Enter new password"
+                      {...field}
+                    />
                   </FormControl>
                   <FormDescription hidden></FormDescription>
                   <FormMessage />
@@ -80,7 +84,11 @@ export const SetNewPass = () => {
                 <FormItem className="w-full">
                   <FormLabel>Confirm password</FormLabel>
                   <FormControl>
-                    <Input placeholder="Confirm password" {...field} />
+                    <Input
+                      type="password"
+                      placeholder="Confirm password"
+                      {...field}
+                    />
                   </FormControl>
                   <FormDescription hidden></FormDescription>
                   <FormMessage />

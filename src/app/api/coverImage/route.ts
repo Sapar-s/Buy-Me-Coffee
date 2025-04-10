@@ -5,14 +5,12 @@ export async function POST(req: Request): Promise<Response> {
   try {
     const { imageURL, userId } = await req.json();
 
-    const addImageQuery = `  UPDATE "Profile" SET backgroundimage = $1 WHERE userid = $2 RETURNING *;`;
+    const addImageQuery = `UPDATE "Profile" SET backgroundimage = $1 WHERE userid = $2 RETURNING *;`;
 
     const newBackgroundImage = await runQuery(addImageQuery, [
       imageURL,
       userId,
     ]);
-
-    console.log("newBackgroundImage", newBackgroundImage);
 
     return new NextResponse(
       JSON.stringify({
@@ -45,6 +43,34 @@ export async function GET(req: Request): Promise<Response> {
       JSON.stringify({
         backgroundImage: getImageData,
         message: "Successfully getting background image",
+      }),
+      { status: 201, headers: { "Content-Type": "application/json" } }
+    );
+  } catch (error) {
+    console.error("Error:", error);
+    return new NextResponse(JSON.stringify({ error: "An error occurred" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+}
+
+export async function PUT(req: Request): Promise<Response> {
+  try {
+    const { imageURL, userId } = await req.json();
+
+    const changeImageQuery = `UPDATE "Profile" SET backgroundimage = $1 WHERE userid = $2 RETURNING *; `;
+    const newBackgroundImage = await runQuery(changeImageQuery, [
+      imageURL,
+      userId,
+    ]);
+
+    console.log("newBackgroundImage", newBackgroundImage);
+
+    return new NextResponse(
+      JSON.stringify({
+        backgroundImage: newBackgroundImage,
+        message: "Successfully add background image",
       }),
       { status: 201, headers: { "Content-Type": "application/json" } }
     );

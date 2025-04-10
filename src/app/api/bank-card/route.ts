@@ -18,8 +18,6 @@ export async function POST(req: Request): Promise<Response> {
       userId,
     ])) as { id: number }[];
 
-    console.log("newBankCard", newBankCard);
-
     if (!newBankCard) {
       return new NextResponse(
         JSON.stringify({
