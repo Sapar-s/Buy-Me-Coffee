@@ -15,11 +15,11 @@ export const SupporterPage = ({ profileId }: { profileId: number }) => {
     getDonationInfo(profileId);
   }, []);
 
-  console.log("donationsInfo in supporter Page.tsx => ", donationsInfo);
   return (
     <>
       {users?.map((user) => {
         if (user.id !== profileId) return null;
+        console.log("user", user);
         return (
           <div
             key={user.id}

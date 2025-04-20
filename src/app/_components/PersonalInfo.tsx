@@ -34,7 +34,6 @@ export const PersonalInfo = () => {
   const [file, setFile] = useState<File | null>(null);
   const { users, changeProfile, logedUser } = useUser()!;
 
-  console.log("dotor ni yu bain ", logedUser);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {

@@ -26,6 +26,7 @@ import { useRouter } from "next/navigation";
 import { CountryDropdown } from "@/components/ui/country-dropdown";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import { useBankCard } from "@/app/_context/BankCardContext";
 
 const formSchema = z.object({
   country: z.string().nonempty("Please select country"),
@@ -39,7 +40,8 @@ const formSchema = z.object({
 
 export const SecondStep = () => {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const { loading, connectBankCard } = useBankCard()!;
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -52,43 +54,6 @@ export const SecondStep = () => {
       cvc: "",
     },
   });
-
-  const connectBankCard = async (
-    country: string,
-    firstName: string,
-    lastName: string,
-    cardNumber: string,
-    expires: string,
-    year: string,
-    cvc: string
-  ) => {
-    setLoading(true);
-    try {
-      const res = await fetch("/api/bank-card", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          country: country,
-          firstName: firstName,
-          lastName: lastName,
-          cardNumber: cardNumber,
-          expires: expires,
-          year: year,
-          cvc: cvc,
-          userId: localStorage.getItem("userId"),
-        }),
-      });
-      const jsonData = await res.json();
-      console.log("jsonData", jsonData);
-    } catch (error) {
-      console.error("Error:", error);
-      alert("An error occurred while connecting the bank card.");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log("values", values);

@@ -26,10 +26,11 @@ export type profileType = {
 export type BankCardType = {
   id: number;
   country: string;
-  firstName: string;
-  lastName: string;
-  cardNumber: string;
-  expiryDate: string;
+  firstname: string;
+  lastname: string;
+  cardnumber: string;
+  expires: string;
+  year: string;
   cvc: string;
   userId: number;
   createdAt: string;

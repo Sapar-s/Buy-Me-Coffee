@@ -49,3 +49,36 @@ export async function POST(req: Request): Promise<Response> {
     });
   }
 }
+
+export async function GET(req: Request): Promise<Response> {
+  try {
+    const { searchParams } = new URL(req.url);
+    const userId = searchParams.get("userId");
+
+    if (!userId) {
+      return new NextResponse(
+        JSON.stringify({ message: "User ID is required" }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    console.log("userIdfasdfdasf ", userId);
+
+    const getBankCardData = `SELECT * FROM "BankCard" WHERE userid = $1 `;
+    const bankCard = await runQuery(getBankCardData, [userId]);
+
+    return new NextResponse(
+      JSON.stringify({
+        bankCard: bankCard,
+        message: "Successfully get bank card",
+      }),
+      { status: 201, headers: { "Content-Type": "application/json" } }
+    );
+  } catch (error) {
+    console.error("Error:", error);
+    return new Response(JSON.stringify({ error: "An error occurred" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+}

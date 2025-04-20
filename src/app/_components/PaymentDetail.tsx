@@ -22,6 +22,9 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useBankCard } from "../_context/BankCardContext";
+import { useEffect } from "react";
+import { CountryDropdown } from "@/components/ui/country-dropdown";
 
 const formSchema = z.object({
   country: z.string().nonempty("Please select country"),
@@ -34,6 +37,8 @@ const formSchema = z.object({
 });
 
 export const PaymentDetail = () => {
+  const { bankCard } = useBankCard()!;
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -54,6 +59,20 @@ export const PaymentDetail = () => {
     // ✅ This will be type-safe and validated.
     console.log(values);
   }
+
+  useEffect(() => {
+    if (bankCard) {
+      form.reset({
+        country: bankCard.country,
+        firstName: bankCard.firstname,
+        lastName: bankCard.lastname,
+        card: bankCard.cardnumber,
+        expires: bankCard.expires,
+        year: bankCard.year,
+        cvc: "",
+      });
+    }
+  }, [bankCard]);
   return (
     <>
       <Form {...form}>
@@ -67,22 +86,19 @@ export const PaymentDetail = () => {
           <div className="w-full flex flex-col items-start gap-6 ">
             <FormField
               control={form.control}
-              name="firstName"
+              name="country"
               render={({ field }) => (
                 <FormItem className="flex w-full flex-col gap-2 items-start ">
                   <FormLabel>Select country</FormLabel>
-                  <FormControl>
-                    <Select {...field}>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Country" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="light">United States</SelectItem>
-                        <SelectItem value="dark">Russia</SelectItem>
-                        <SelectItem value="system">China</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
+                  <div className="w-full">
+                    <CountryDropdown
+                      placeholder="Country"
+                      defaultValue={field.value}
+                      onChange={(country) => {
+                        field.onChange(country.alpha3);
+                      }}
+                    />
+                  </div>
                   <FormDescription hidden></FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -152,13 +168,30 @@ export const PaymentDetail = () => {
                 render={({ field }) => (
                   <FormItem className="w-full">
                     <FormLabel>Expires</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Month"
-                        className="w-full h-[36px] "
-                        {...field}
-                      />
-                    </FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="w-full h-[36px]">
+                          <SelectValue placeholder="Month" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="01">01</SelectItem>
+                        <SelectItem value="02">02</SelectItem>
+                        <SelectItem value="03">03</SelectItem>
+                        <SelectItem value="04">04</SelectItem>
+                        <SelectItem value="05">05</SelectItem>
+                        <SelectItem value="06">06</SelectItem>
+                        <SelectItem value="07">07</SelectItem>
+                        <SelectItem value="08">08</SelectItem>
+                        <SelectItem value="09">09</SelectItem>
+                        <SelectItem value="10">10</SelectItem>
+                        <SelectItem value="11">11</SelectItem>
+                        <SelectItem value="12">12</SelectItem>
+                      </SelectContent>
+                    </Select>
                     <FormDescription hidden></FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -170,13 +203,29 @@ export const PaymentDetail = () => {
                 render={({ field }) => (
                   <FormItem className="w-full">
                     <FormLabel>Year</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Year"
-                        className="w-full h-[36px] "
-                        {...field}
-                      />
-                    </FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="w-full h-[36px]">
+                          <SelectValue placeholder="Year" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="2024">2024</SelectItem>
+                        <SelectItem value="2025">2025</SelectItem>
+                        <SelectItem value="2026">2026</SelectItem>
+                        <SelectItem value="2027">2027</SelectItem>
+                        <SelectItem value="2028">2028</SelectItem>
+                        <SelectItem value="2029">2029</SelectItem>
+                        <SelectItem value="2030">2030</SelectItem>
+                        <SelectItem value="2031">2031</SelectItem>
+                        <SelectItem value="2032">2032</SelectItem>
+                        <SelectItem value="2033">2033</SelectItem>
+                        <SelectItem value="2034">2034</SelectItem>
+                      </SelectContent>
+                    </Select>
                     <FormDescription hidden></FormDescription>
                     <FormMessage />
                   </FormItem>

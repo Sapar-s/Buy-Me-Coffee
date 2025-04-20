@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import UserProvider from "./_context/UserContext";
 import DonationProvider from "./_context/DonationContext";
+import BankCardProvider from "./_context/BankCardContext";
+import ProfileProvider from "./_context/ProfileContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,9 +31,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <DonationProvider>
-          <UserProvider>{children}</UserProvider>
-        </DonationProvider>
+        <ProfileProvider>
+          <BankCardProvider>
+            <DonationProvider>
+              <UserProvider>{children}</UserProvider>
+            </DonationProvider>
+          </BankCardProvider>
+        </ProfileProvider>
       </body>
     </html>
   );

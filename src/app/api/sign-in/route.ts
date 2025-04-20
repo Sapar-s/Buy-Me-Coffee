@@ -33,7 +33,7 @@ export async function POST(req: Request): Promise<Response> {
 
     if (!isPasswordValid) {
       return new NextResponse(
-        JSON.stringify({ error: "Password buruu baina!" }),
+        JSON.stringify({ message: "Password buruu baina!" }),
         {
           status: 401,
           headers: { "Content-Type": "applicaton/json" },

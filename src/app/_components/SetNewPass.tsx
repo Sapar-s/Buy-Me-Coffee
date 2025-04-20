@@ -13,26 +13,37 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
+import { Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-const formSchema = z.object({
-  password: z
-    .string()
-    .min(8, { message: "Password must be at least 8 characters long." })
-    .refine((password) => /[A-Z]/.test(password), {
-      message: "Password must include at least one uppercase letter.",
-    })
-    .refine((password) => /[a-z]/.test(password), {
-      message: "Password must include at least one lowercase letter.",
-    })
-    .refine((password) => /[0-9]/.test(password), {
-      message: "Password must include at least one number.",
-    }),
-  confirmPassword: z.string(),
-});
+const formSchema = z
+  .object({
+    password: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters long." })
+      .refine((password) => /[A-Z]/.test(password), {
+        message: "Password must include at least one uppercase letter.",
+      })
+      .refine((password) => /[a-z]/.test(password), {
+        message: "Password must include at least one lowercase letter.",
+      })
+      .refine((password) => /[0-9]/.test(password), {
+        message: "Password must include at least one number.",
+      }),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    path: ["confirmPassword"],
+    message: "Password таарахгүй байна",
+  });
 
 export const SetNewPass = () => {
+  const [userId, setUserId] = useState<number | null>(null);
+  const [loading, setLoading] = useState(false);
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -43,11 +54,40 @@ export const SetNewPass = () => {
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setLoading(true);
+    try {
+      const res = await axios.put(`/api/update-password`, {
+        userId: userId,
+        updatePassword: values.password,
+      });
+
+      if (res.status === 200) {
+        alert("Successfully updated password");
+        form.reset();
+      }
+      console.log("res", res);
+    } catch (error) {
+      console.log("error", error);
+      alert("error in update password");
+    } finally {
+      setLoading(false);
+    }
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values);
   }
+
+  useEffect(() => {
+    const id = localStorage.getItem("userId");
+    if (id !== null) {
+      const parsedId = Number(id);
+      if (!isNaN(parsedId) && parsedId > 0) {
+        setUserId(parsedId);
+      }
+    }
+  }, []);
+
   return (
     <>
       <Form {...form}>
@@ -97,8 +137,18 @@ export const SetNewPass = () => {
             />
           </div>
 
-          <Button type="submit" className="w-full">
-            Save changes
+          <Button
+            type="submit"
+            disabled={loading}
+            className="w-full cursor-pointer"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="animate-spin" /> Loading...
+              </>
+            ) : (
+              " Save changes"
+            )}
           </Button>
         </form>
       </Form>

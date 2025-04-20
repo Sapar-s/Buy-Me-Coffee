@@ -11,7 +11,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 import { receivedDonationsType } from "@/util/types";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 type UserContextType = {
   giveDonation: (
@@ -36,6 +36,7 @@ const DonationProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(false);
   const [donationsInfo, setDonationsInfo] = useState(null);
   const pathname = usePathname();
+  const router = useRouter();
 
   const giveDonation = async (
     amount: string,
@@ -54,6 +55,7 @@ const DonationProvider = ({ children }: { children: ReactNode }) => {
       });
 
       toast.success(response.data.message);
+      router.push(`/success-page/${profileId}`);
     } catch (error) {
       console.log("error", error);
       alert("error in giving donation");
