@@ -27,8 +27,6 @@ export async function POST(req: Request): Promise<Response> {
       profileId,
     ])) as { id: number }[];
 
-    console.log("newDonation", newDonation);
-
     if (!newDonation) {
       return new NextResponse(
         JSON.stringify({

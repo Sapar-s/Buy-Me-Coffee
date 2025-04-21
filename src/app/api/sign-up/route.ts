@@ -25,7 +25,6 @@ export async function POST(req: Request): Promise<Response> {
       );
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log("hashed password", hashedPassword);
 
     const createUser = `INSERT INTO "Users" (username, email, password) VALUES ($1, $2, $3)`;
 
@@ -34,8 +33,6 @@ export async function POST(req: Request): Promise<Response> {
       email,
       hashedPassword,
     ]);
-
-    console.log("newUser", newUser);
 
     return new NextResponse(
       JSON.stringify({ user: newUser, message: "Амжилттай бүртгэгдлээ" }),

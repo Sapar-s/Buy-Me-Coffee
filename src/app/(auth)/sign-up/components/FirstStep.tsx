@@ -44,7 +44,6 @@ const FirstStep = ({
     setCurrentStep(currentStep + 1);
     localStorage.setItem("userName", values.username);
     setUserName(values.username);
-    console.log("firststep", values);
   }
 
   return (

@@ -79,7 +79,6 @@ export const AddCoverImg = () => {
         imageURL: imageURL,
       });
 
-      console.log("response => ", response);
       alert("Зураг амжилттай солигдлоо!");
 
       // UI-г шинэчлэх

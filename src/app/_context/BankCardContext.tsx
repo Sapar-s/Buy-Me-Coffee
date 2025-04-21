@@ -58,7 +58,6 @@ const BankCardProvider = ({ children }: { children: React.ReactNode }) => {
         }),
       });
       const jsonData = await res.json();
-      console.log("jsonData", jsonData);
     } catch (error) {
       console.error("Error:", error);
       alert("An error occurred while connecting the bank card.");

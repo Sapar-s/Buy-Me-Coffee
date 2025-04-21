@@ -66,7 +66,6 @@ export const SetNewPass = () => {
         alert("Successfully updated password");
         form.reset();
       }
-      console.log("res", res);
     } catch (error) {
       console.log("error", error);
       alert("error in update password");
@@ -75,7 +74,6 @@ export const SetNewPass = () => {
     }
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values);
   }
 
   useEffect(() => {

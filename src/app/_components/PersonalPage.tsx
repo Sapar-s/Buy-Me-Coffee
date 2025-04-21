@@ -1,7 +1,7 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Camera, Heart } from "lucide-react";
+import { Camera, Heart, X } from "lucide-react";
 
 import {
   Dialog,
@@ -31,6 +31,8 @@ import { useUser } from "../_context/UserContext";
 import { useEffect, useState } from "react";
 import { useDonation } from "../_context/DonationContext";
 import Image from "next/image";
+import axios from "axios";
+import { uploadImage } from "@/lib/handle-upload";
 
 const formSchema = z.object({
   photo: z.string().nonempty("Зураг заавал шаардлагатай"),
@@ -46,75 +48,70 @@ export const PersonalPage = () => {
 
   const { users } = useUser()!;
   const { donationsInfo } = useDonation()!;
-  const [userId, setUserId] = useState<number | null>(null);
+  const [loading, setLoading] = useState(false);
   const [image, setImage] = useState<string | null>(null);
-  const [currentUser, setCurrentUser] = useState<any>(null);
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const tempImageUrl = URL.createObjectURL(file);
-    setImage(tempImageUrl);
-    form.setValue("photo", tempImageUrl); // Зураг path-г хадгалах
-  };
-
-  console.log("users", users);
-
-  useEffect(() => {
-    const value = Number(localStorage.getItem("userId"));
-    setUserId(value);
-  }, []);
-
-  useEffect(() => {
-    if (!userId || !users) return;
-    const foundUser = users.find((u) => u.id === userId);
-    if (foundUser && foundUser.profile) {
-      const profile = foundUser.profile;
-      form.reset({
-        photo: profile.avatarImage ?? "",
-        name: profile.name ?? "",
-        about: profile.about ?? "",
-        url: profile.socialmediaurl ?? "",
-      });
-      setImage(profile.avatarImage ?? null);
-      setCurrentUser(foundUser);
-    }
-  }, [userId, users, form]);
+  const [userId, setUserId] = useState<number | null>(null);
+  const [avatarImageFile, setAvatarImageFile] = useState<File | null>(null);
+  const { logedUser } = useUser()!;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (!currentUser || !userId) return;
-
-    const profile = {
-      name: values.name,
-      about: values.about,
-      socialmediaurl: values.url,
-      avatarImage: values.photo,
-    };
-
-    const updateData = {
-      userId,
-      profile,
-    };
-
-    console.log("updateData before PUT:", updateData);
-
+    setLoading(true);
+    const imageURL = avatarImageFile
+      ? await uploadImage(avatarImageFile)
+      : null;
     try {
-      const res = await fetch("/api/complete-profile", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updateData),
+      const res = await axios.put("/api/complete-profile", {
+        name: values.name,
+        about: values.about,
+        socialMediaURL: values.url,
+        avatarImage: imageURL,
+        id: userId,
       });
 
-      if (!res.ok) throw new Error("Алдаа гарлаа!");
-
-      alert("Профайл амжилттай шинэчлэгдлээ!");
+      if (res.status === 200) {
+        alert(res.data.message);
+      }
     } catch (err) {
-      console.error("❌ Update error:", err);
-      alert("Шинэчлэх үед алдаа гарлаа!");
+      console.error(err);
+      alert("error ");
+    } finally {
+      setLoading(false);
     }
   }
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files ? e.target.files[0] : null;
+
+    if (!file) {
+      return;
+    }
+
+    setAvatarImageFile(file);
+
+    const temImageUrl = URL.createObjectURL(file);
+    setImage(temImageUrl);
+    form.setValue("photo", "uploaded");
+  };
+
+  const deleteImage = () => {
+    setImage(null);
+    setAvatarImageFile(null);
+  };
+
+  useEffect(() => {
+    const value = localStorage.getItem("userId");
+    setUserId(Number(value));
+  }, [userId, form, loading, logedUser]);
+
+  useEffect(() => {
+    form.reset({
+      photo: logedUser?.profile?.avatarImage,
+      name: logedUser?.profile?.name,
+      about: logedUser?.profile?.about,
+      url: logedUser?.profile?.socialmediaurl,
+    });
+    setImage(logedUser?.profile?.avatarImage ?? null);
+  }, [logedUser, loading, userId, form]);
 
   return (
     <>
@@ -162,28 +159,18 @@ export const PersonalPage = () => {
                               <FormLabel>Add photo</FormLabel>
                               <FormControl>
                                 {image ? (
-                                  <div className="relative ">
-                                    <Image
-                                      alt="Profile"
+                                  <div className="flex items-center justify-center w-40 h-40 relative ">
+                                    <img
                                       src={image}
-                                      height={160}
-                                      width={160}
-                                      className="w-40 h-40 rounded-full bg-cover bg-center "
+                                      alt=""
+                                      className="w-40 h-40 rounded-full object-cover mb-2 "
                                     />
-                                    {/* <Camera className="text-gray-300 h-[28px] absolute top-[67px] left-[67px] z-40 w-[28px]" /> */}
-                                    <label
-                                      {...field}
-                                      htmlFor="photo"
-                                      className="w-[28px] h-[28px] absolute top-[67px] left-[67px]  cursor-pointer  flex items-center justify-center "
+                                    <div
+                                      onClick={deleteImage}
+                                      className="w-[28px] h-[28px] bg-[#ffffff] hover:bg-[#dddddd] p-1 flex items-center justify-center rounded-full text-red-500 opacity-65 cursor-pointer absolute "
                                     >
-                                      <Camera className="text-gray-300 h-[28px] z-40 w-[28px]" />
-                                      <Input
-                                        type="file"
-                                        id="photo"
-                                        className="hidden"
-                                        onChange={handleFileChange}
-                                      />
-                                    </label>
+                                      <X />
+                                    </div>
                                   </div>
                                 ) : (
                                   <label
@@ -191,7 +178,7 @@ export const PersonalPage = () => {
                                     htmlFor="photo"
                                     className="w-40 h-40 rounded-full cursor-pointer border-[2px] border-dashed flex items-center justify-center "
                                   >
-                                    <Camera className="text-gray-300 h-[28px] z-40 w-[28px]" />
+                                    <Camera className="text-gray-300 h-[28px] w-[28px] " />
                                     <Input
                                       type="file"
                                       id="photo"

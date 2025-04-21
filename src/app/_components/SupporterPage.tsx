@@ -19,7 +19,6 @@ export const SupporterPage = ({ profileId }: { profileId: number }) => {
     <>
       {users?.map((user) => {
         if (user.id !== profileId) return null;
-        console.log("user", user);
         return (
           <div
             key={user.id}

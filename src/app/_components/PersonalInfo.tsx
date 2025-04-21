@@ -15,11 +15,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
-import { Camera } from "lucide-react";
+import { Camera, Loader2, X } from "lucide-react";
 import { uploadImage } from "@/lib/handle-upload";
 import { useUser } from "../_context/UserContext";
+import axios from "axios";
 
 const formSchema = z.object({
   photo: z.string().nonempty("Зураг заавал шаардлагатай"),
@@ -29,10 +30,11 @@ const formSchema = z.object({
 });
 
 export const PersonalInfo = () => {
-  const [image, setImage] = useState<string>("");
   const [loading, setLoading] = useState(false);
-  const [file, setFile] = useState<File | null>(null);
-  const { users, changeProfile, logedUser } = useUser()!;
+  const [image, setImage] = useState<string | null>(null);
+  const [avatarImageFile, setAvatarImageFile] = useState<File | null>(null);
+  const [userId, setUserId] = useState<number | null>(null);
+  const { logedUser } = useUser()!;
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -44,67 +46,63 @@ export const PersonalInfo = () => {
     },
   });
 
-  useEffect(() => {
-    if (logedUser?.profile?.avatarImage) {
-      setImage(logedUser.profile?.avatarImage);
-    }
-  }, [logedUser]);
-
-  if (!logedUser?.profile) {
-    return <p>Loading...</p>;
-  }
-
-  const imageUpload = async () => {
-    if (file) {
-      const imgUrl = await uploadImage(file);
-      return imgUrl;
-      // console.log("uploadImage", imgUrl);
-      // setImage(imgUrl);
-    }
-  };
-
-  const handleFile = (e: ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files) {
-      return;
-    }
-    const files = e.target.files[0];
-    if (files) {
-      setFile(files);
-      const tempImageUrl = URL.createObjectURL(files);
-      setImage(tempImageUrl);
-      form.setValue("photo", "uploaded");
-    }
-  };
-
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
-    const image = await imageUpload();
-    if (!image) {
-      return;
-    }
-    console.log("onsubmit", image);
+    const imageURL = avatarImageFile
+      ? await uploadImage(avatarImageFile)
+      : null;
     try {
-      if (logedUser?.profile) {
-        await changeProfile(
-          image,
-          values.name,
-          values.about,
-          values.url,
-          logedUser.profile.id
-        );
-      } else {
-        console.log("Profile is not available.");
+      const res = await axios.put("/api/complete-profile", {
+        name: values.name,
+        about: values.about,
+        socialMediaURL: values.url,
+        avatarImage: imageURL,
+        id: userId,
+      });
+
+      if (res.status === 200) {
+        alert(res.data.message);
       }
     } catch (err) {
       console.error(err);
+      alert("error ");
     } finally {
       setLoading(false);
     }
   }
 
-  const deleteHandler = () => {
-    setImage("");
-    setFile(null);
+  useEffect(() => {
+    const value = localStorage.getItem("userId");
+    setUserId(Number(value));
+  }, [userId, form, loading, logedUser]);
+
+  useEffect(() => {
+    form.reset({
+      photo: logedUser?.profile?.avatarImage,
+      name: logedUser?.profile?.name,
+      about: logedUser?.profile?.about,
+      url: logedUser?.profile?.socialmediaurl,
+    });
+    setImage(logedUser?.profile?.avatarImage ?? null);
+  }, [logedUser, loading, userId, form]);
+
+  const deleteImage = () => {
+    setImage(null);
+    setAvatarImageFile(null);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files ? e.target.files[0] : null;
+
+    if (!file) {
+      return;
+    }
+
+    setAvatarImageFile(file);
+
+    const temImageUrl = URL.createObjectURL(file);
+    setImage(temImageUrl);
+    form.setValue("photo", "uploaded");
   };
 
   return (
@@ -116,70 +114,52 @@ export const PersonalInfo = () => {
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col w-full items-start gap-6  "
         >
-          {image ? (
-            <div className="relative  flex justify-center items-center w-[160px] h-[160px]">
-              <Image
-                src={image}
-                alt=""
-                width={160}
-                height={160}
-                className="rounded-full object-cover"
-              />
-
-              <Button
-                type="button"
-                className="absolute bg-white text-red-500 rounded-full"
-                onClick={deleteHandler}
-              >
-                X
-              </Button>
-            </div>
-          ) : (
-            <FormField
-              control={form.control}
-              name="photo"
-              render={({ field: { onChange, value, ...rest } }) => (
-                <FormItem className="flex flex-col gap-3  items-start ">
-                  <FormLabel className="text-[14px] font-[500] leading-[14px] ">
-                    Add photo
-                  </FormLabel>
-                  <FormControl>
-                    <div>
-                      {image ? (
-                        <div className="flex justify-center items-center">
-                          <Image
-                            alt="zurag"
-                            src={image}
-                            height={200}
-                            width={200}
-                            className="w-[160px] h-[160px] object-cover  rounded-full absolute "
-                          />
-                          <Button
-                            className="absolute bg-white text-red-500 rounded-full"
-                            onClick={deleteHandler}
-                          >
-                            X
-                          </Button>
+          <FormField
+            control={form.control}
+            name="photo"
+            render={({ field }) => (
+              <FormItem className="flex flex-col gap-3  items-start ">
+                <FormLabel className="text-[14px] font-[500] leading-[14px] ">
+                  Add photo
+                </FormLabel>
+                <FormControl>
+                  <div>
+                    {image ? (
+                      <div className="flex items-center justify-center w-40 h-40 relative ">
+                        <img
+                          src={image}
+                          alt=""
+                          className="w-40 h-40 rounded-full object-cover mb-2 "
+                        />
+                        <div
+                          onClick={deleteImage}
+                          className="w-[28px] h-[28px] bg-[#ffffff] hover:bg-[#dddddd] p-1 flex items-center justify-center rounded-full text-red-500 opacity-65 cursor-pointer absolute "
+                        >
+                          <X />
                         </div>
-                      ) : (
-                        <div className="flex justify-center items-center">
-                          <Input
-                            onChange={handleFile}
-                            type="file"
-                            className="w-40 h-40 rounded-full border-[2px] border-dashed "
-                            {...rest}
-                          />
-                          <Camera className="w-[23px] h-[23px] absolute " />
-                        </div>
-                      )}
-                    </div>
-                  </FormControl>
-                  <FormDescription hidden></FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          )}
+                      </div>
+                    ) : (
+                      <label
+                        {...field}
+                        htmlFor="photo"
+                        className="w-40 h-40 rounded-full cursor-pointer border-[2px] border-dashed flex items-center justify-center "
+                      >
+                        <Camera className="text-gray-300 h-[28px] w-[28px] " />
+                        <Input
+                          type="file"
+                          id="photo"
+                          className="hidden"
+                          onChange={handleFileChange}
+                        />
+                      </label>
+                    )}
+                  </div>
+                </FormControl>
+                <FormDescription hidden></FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           <div className="flex flex-col gap-3 items-start w-full ">
             <FormField
@@ -243,7 +223,13 @@ export const PersonalInfo = () => {
             className="w-full h-10 cursor-pointer "
             type="submit"
           >
-            {loading ? "loading" : "Save changes"}
+            {loading ? (
+              <>
+                <Loader2 className="animate-spin" /> Loading...
+              </>
+            ) : (
+              " Save changes"
+            )}
           </Button>
         </form>
       </Form>

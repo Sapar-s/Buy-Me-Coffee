@@ -16,7 +16,6 @@ const SuccessPage = () => {
       ? params.profileId[0]
       : params.profileId || ""
   );
-  console.log("profileId", profileId);
   const { users } = useUser()!;
   return (
     <div>
@@ -35,7 +34,6 @@ const SuccessPage = () => {
             <div className="w-[510px] min-h-[80px] rounded-md flex flex-col px-3 py-2 border border-border ">
               {users?.map((user) => {
                 if (user.id !== profileId) return null;
-                console.log("user", user);
                 return (
                   <>
                     <div className="flex gap-2 ">

@@ -56,7 +56,6 @@ export const SecondStep = () => {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("values", values);
     connectBankCard(
       values.country,
       values.firstName,

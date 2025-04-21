@@ -51,7 +51,6 @@ export const SecondStep = ({
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
     await signUp(values.email, values.password);
-    console.log(values);
     setLoading(false);
   }
 

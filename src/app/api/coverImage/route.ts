@@ -37,8 +37,6 @@ export async function GET(req: Request): Promise<Response> {
 
     const getImageData = await runQuery(getImageQuery, [userId]);
 
-    console.log("getImageData", getImageData);
-
     return new NextResponse(
       JSON.stringify({
         backgroundImage: getImageData,
@@ -64,8 +62,6 @@ export async function PUT(req: Request): Promise<Response> {
       imageURL,
       userId,
     ]);
-
-    console.log("newBackgroundImage", newBackgroundImage);
 
     return new NextResponse(
       JSON.stringify({

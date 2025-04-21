@@ -82,7 +82,6 @@ export const FirstStep = ({
   };
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
     completeProfile(values.name, values.about, values.url);
   }
 

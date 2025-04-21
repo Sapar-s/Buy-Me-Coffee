@@ -39,7 +39,6 @@ const LoginPage = () => {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     login(values.email, values.password);
-    console.log(values);
   }
 
   const login = async (email: string, password: string) => {

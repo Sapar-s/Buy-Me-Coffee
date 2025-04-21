@@ -52,7 +52,6 @@ export const DashboardProfile = ({ profileId }: { profileId: number }) => {
       profileId
     );
 
-    console.log(values);
     form.reset();
   }
 

@@ -62,8 +62,6 @@ export async function GET(req: Request): Promise<Response> {
       );
     }
 
-    console.log("userIdfasdfdasf ", userId);
-
     const getBankCardData = `SELECT * FROM "BankCard" WHERE userid = $1 `;
     const bankCard = await runQuery(getBankCardData, [userId]);
 
