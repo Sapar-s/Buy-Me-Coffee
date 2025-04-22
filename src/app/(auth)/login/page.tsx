@@ -50,16 +50,19 @@ const LoginPage = () => {
       });
 
       localStorage.setItem("userId", res.data.user.id);
-
-      if (res.data.error) {
-        alert(res.data.message);
-        return;
-      }
-
+      alert(res.data.message);
       router.push("/profile");
-    } catch (error) {
-      console.log("error", error);
-      alert("error in login function");
+    } catch (error: any) {
+      if (axios.isAxiosError(error)) {
+        const errorMessage =
+          error.response?.data?.message ||
+          error.response?.data?.error ||
+          "Алдаа гарлаа";
+        alert(errorMessage);
+      } else {
+        alert("Тодорхойгүй алдаа гарлаа");
+      }
+      console.error("Login алдаа:", error);
     } finally {
       setLoading(false);
     }

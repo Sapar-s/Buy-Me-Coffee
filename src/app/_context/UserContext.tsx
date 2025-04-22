@@ -87,12 +87,15 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     getUsers();
+  }, [pathname]);
+
+  useEffect(() => {
     const storedUserId = localStorage.getItem("userId");
     if (storedUserId && users) {
       const user = users.find((u) => u.id === Number(storedUserId));
       if (user) setLogedUser(user);
     }
-  }, [pathname]);
+  }, [pathname, users]);
 
   return (
     <userContext.Provider

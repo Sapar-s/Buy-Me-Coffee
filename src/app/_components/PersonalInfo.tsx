@@ -77,13 +77,15 @@ export const PersonalInfo = () => {
   }, [userId, form, loading, logedUser]);
 
   useEffect(() => {
-    form.reset({
-      photo: logedUser?.profile?.avatarImage,
-      name: logedUser?.profile?.name,
-      about: logedUser?.profile?.about,
-      url: logedUser?.profile?.socialmediaurl,
-    });
-    setImage(logedUser?.profile?.avatarImage ?? null);
+    if (logedUser) {
+      form.reset({
+        photo: logedUser?.profile?.avatarImage,
+        name: logedUser?.profile?.name,
+        about: logedUser?.profile?.about,
+        url: logedUser?.profile?.socialmediaurl,
+      });
+      setImage(logedUser?.profile?.avatarImage ?? null);
+    }
   }, [logedUser, loading, userId, form]);
 
   const deleteImage = () => {
