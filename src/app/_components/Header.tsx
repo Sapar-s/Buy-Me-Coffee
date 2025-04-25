@@ -1,9 +1,20 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Coffee } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 export const Header = () => {
+  const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.removeItem("userId");
+    localStorage.removeItem("userName");
+    router.push("/login");
+  };
+
   return (
     <div className="w-screen flex justify-center bg-background ">
       <div className="flex justify-between items-center py-2 px-4 max-w-[1440px] w-full ">
@@ -16,14 +27,14 @@ export const Header = () => {
               </h4>
             </div>
           </Link>
-          <Link href={"/login"}>
-            <Button
-              variant={"secondary"}
-              className="h-10 py-2 px-4 cursor-pointer "
-            >
-              Log out
-            </Button>
-          </Link>
+
+          <Button
+            onClick={handleLogout}
+            variant={"secondary"}
+            className="h-10 py-2 px-4 cursor-pointer "
+          >
+            Log out
+          </Button>
         </div>
       </div>
     </div>

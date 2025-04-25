@@ -24,7 +24,6 @@ import {
 } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
 import { CountryDropdown } from "@/components/ui/country-dropdown";
-import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useBankCard } from "@/app/_context/BankCardContext";
 

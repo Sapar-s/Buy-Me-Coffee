@@ -19,7 +19,7 @@ const ProfilePage = () => {
     const userId = Number(localStorage.getItem("userId"));
     if (users && userId) {
       const foundUser = users.find((user) => user.id === userId);
-      if (foundUser) {
+      if (foundUser?.profile?.id) {
         setShouldRedirect(true);
       }
     }
