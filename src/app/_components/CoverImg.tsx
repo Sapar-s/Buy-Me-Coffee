@@ -1,6 +1,7 @@
 import axios from "axios";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export const CoverImg = ({ profileId }: { profileId: number }) => {
   const [image, setImage] = useState<string | null>(null);
@@ -16,7 +17,7 @@ export const CoverImg = ({ profileId }: { profileId: number }) => {
       }
     } catch (error) {
       console.log("error", error);
-      alert("Database-аас зураг авахад алдаа гарлаа!");
+      toast.error("Database-аас зураг авахад алдаа гарлаа!");
     }
   };
 

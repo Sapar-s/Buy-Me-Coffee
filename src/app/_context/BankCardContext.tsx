@@ -3,6 +3,7 @@
 import { BankCardType } from "@/util/types";
 import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
+import { toast } from "sonner";
 
 type BankCardContextType = {
   loading: boolean;
@@ -41,7 +42,7 @@ const BankCardProvider = ({ children }: { children: React.ReactNode }) => {
   ) => {
     setLoading(true);
     try {
-      const res = await fetch("/api/bank-card", {
+      await fetch("/api/bank-card", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -57,10 +58,9 @@ const BankCardProvider = ({ children }: { children: React.ReactNode }) => {
           userId: localStorage.getItem("userId"),
         }),
       });
-      const jsonData = await res.json();
     } catch (error) {
       console.error("Error:", error);
-      alert("An error occurred while connecting the bank card.");
+      toast.error("error in connect bank card");
     } finally {
       setLoading(false);
     }
@@ -76,7 +76,7 @@ const BankCardProvider = ({ children }: { children: React.ReactNode }) => {
       setBankCard(res.data.bankCard[0]);
     } catch (error) {
       console.log("error", error);
-      alert("error in get bank card");
+      toast.error("error in get bank card");
     }
   };
 

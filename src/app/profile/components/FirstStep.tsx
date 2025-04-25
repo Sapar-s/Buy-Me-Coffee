@@ -19,6 +19,7 @@ import { useState } from "react";
 import { Camera, Loader2 } from "lucide-react";
 import Image from "next/image";
 import { uploadImage } from "@/lib/handle-upload";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   image: z.string().nonempty("Зураг заавал шаардлагатай"),
@@ -56,7 +57,7 @@ export const FirstStep = ({
     setLoading(true);
     const imageURL = await uploadImage(avatarImageFile);
     try {
-      const res = await fetch("/api/complete-profile", {
+      await fetch("/api/complete-profile", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -70,12 +71,11 @@ export const FirstStep = ({
         }),
       });
 
-      const jsonData = await res.json();
       setCurrentStep(currentStep + 1);
-      alert(jsonData.message);
+      toast.success("Амжилттай хадгаллаа!");
     } catch (error) {
       console.log("error", error);
-      alert("error in completing profile");
+      toast.error("Алдаа гарлаа!");
     } finally {
       setLoading(false);
     }

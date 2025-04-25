@@ -58,7 +58,7 @@ const DonationProvider = ({ children }: { children: ReactNode }) => {
       router.push(`/success-page/${profileId}`);
     } catch (error) {
       console.log("error", error);
-      alert("error in giving donation");
+      toast.error("Алдаа гарлаа! Дараа дахин оролдоно уу.");
     } finally {
       setLoading(false);
     }
@@ -71,7 +71,7 @@ const DonationProvider = ({ children }: { children: ReactNode }) => {
       setDonationsInfo(jsonData);
     } catch (error) {
       console.log("error", error);
-      alert("error in getting donation info");
+      toast.error("Хандивын мэдээлэл авахад алдаа гарлаа!");
     }
   };
 

@@ -17,6 +17,7 @@ import axios from "axios";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 const formSchema = z
@@ -63,12 +64,12 @@ export const SetNewPass = () => {
       });
 
       if (res.status === 200) {
-        alert("Successfully updated password");
+        toast.success("Successfully updated password");
         form.reset();
       }
     } catch (error) {
       console.log("error", error);
-      alert("error in update password");
+      toast.error("Алдаа гарлаа!");
     } finally {
       setLoading(false);
     }

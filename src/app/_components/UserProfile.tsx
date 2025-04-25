@@ -13,6 +13,7 @@ import {
 import { Copy } from "lucide-react";
 import { useUser } from "../_context/UserContext";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export const UserProfile = () => {
   const [userId, setUserId] = useState<number | null>(null);
@@ -20,14 +21,14 @@ export const UserProfile = () => {
 
   const handleCopy = async (socialmediaurl: string | undefined) => {
     if (!socialmediaurl) {
-      alert("Url baihgui bn");
+      toast.error("URL байхгүй байна");
       return;
     }
     try {
       await navigator.clipboard.writeText(socialmediaurl);
-      alert("Амжилттай хууллаа!");
+      toast.success("Амжилттай хууллаа!");
     } catch (err) {
-      alert("Хуулахад алдаа гарлаа");
+      toast.error("Хуулахад алдаа гарлаа");
       console.log("err", err);
     }
   };

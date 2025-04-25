@@ -19,6 +19,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useProfile } from "../_context/ProfileContext";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   successMessage: z.string().nonempty("Please enter your message"),
@@ -51,17 +52,17 @@ export const SuccessPage = () => {
       });
 
       if (res.status === 200) {
-        alert("Successfully completed success message");
+        toast.success("Successfully completed success message");
         form.reset({ successMessage: values.successMessage });
       } else {
-        alert("Something went wrong");
+        toast.error("Failed to save success message");
       }
 
       getSuccessMessage();
     } catch (error) {
       console.log("error", error);
 
-      alert("error in success message fetch function");
+      toast.error("Failed to save success message");
     } finally {
       setLoading(false);
     }

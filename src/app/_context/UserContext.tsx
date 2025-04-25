@@ -47,12 +47,12 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
       setUsers(jsonData);
 
       if (jsonData.error) {
-        alert(jsonData.message);
+        toast.error(jsonData.error);
         return;
       }
     } catch (error) {
       console.log("error", error);
-      alert("error in getting user");
+      toast.error("Мэдээллийг авахад алдаа гарлаа!");
     }
   };
 

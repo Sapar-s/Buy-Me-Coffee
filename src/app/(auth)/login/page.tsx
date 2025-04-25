@@ -20,6 +20,8 @@ import {
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import { useUser } from "@/app/_context/UserContext";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -29,6 +31,7 @@ const formSchema = z.object({
 const LoginPage = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const { users } = useUser()!;
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -50,17 +53,26 @@ const LoginPage = () => {
       });
 
       localStorage.setItem("userId", res.data.user.id);
-      alert(res.data.message);
-      router.push("/profile");
-    } catch (error: any) {
+      toast.success("Амжилттай нэвтэрлээ");
+
+      if (users && res.data.user.id) {
+        const foundUser = users.find((user) => user.id === res.data.user.id);
+
+        if (foundUser?.profile?.name) {
+          router.push("/");
+        } else {
+          router.push("/profile");
+        }
+      }
+    } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         const errorMessage =
           error.response?.data?.message ||
           error.response?.data?.error ||
           "Алдаа гарлаа";
-        alert(errorMessage);
+        toast.error(errorMessage);
       } else {
-        alert("Тодорхойгүй алдаа гарлаа");
+        toast.warning("Тодорхойгүй алдаа гарлаа");
       }
       console.error("Login алдаа:", error);
     } finally {

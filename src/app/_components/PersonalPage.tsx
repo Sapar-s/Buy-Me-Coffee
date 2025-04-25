@@ -30,9 +30,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { useUser } from "../_context/UserContext";
 import { useEffect, useState } from "react";
 import { useDonation } from "../_context/DonationContext";
-import Image from "next/image";
 import axios from "axios";
 import { uploadImage } from "@/lib/handle-upload";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   photo: z.string().nonempty("Зураг заавал шаардлагатай"),
@@ -69,11 +69,11 @@ export const PersonalPage = () => {
       });
 
       if (res.status === 200) {
-        alert(res.data.message);
+        toast.success("Амжилттай хадгаллаа!");
       }
     } catch (err) {
       console.error(err);
-      alert("error ");
+      toast.error("Зураг хадгалахад алдаа гарлаа!");
     } finally {
       setLoading(false);
     }

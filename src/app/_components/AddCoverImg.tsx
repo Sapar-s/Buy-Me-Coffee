@@ -3,10 +3,11 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { uploadImage } from "@/lib/handle-upload";
-import { Camera, X } from "lucide-react";
+import { Camera } from "lucide-react";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
+import { toast } from "sonner";
 
 export const AddCoverImg = () => {
   const [image, setImage] = useState<string | null>(null);
@@ -31,23 +32,6 @@ export const AddCoverImg = () => {
     getBackgroundImage(id);
   }, [image]);
 
-  const completeBackCover = async () => {
-    const imageURL = await uploadImage(backgroundImageFile);
-    try {
-      await axios.post("/api/coverImage", {
-        imageURL: imageURL,
-        userId: userId,
-      });
-
-      alert("Амжилттай зураг нэмэгдлээ!");
-      getBackgroundImage(localStorage.getItem("userId"));
-      setBackgroundImageFile(null);
-    } catch (error) {
-      console.log("error", error);
-      alert("Зураг хадгалахад алдаа гарлаа!");
-    }
-  };
-
   const getBackgroundImage = async (userId: string | null) => {
     try {
       const response = await axios.get(`/api/coverImage?userId=${userId}`);
@@ -61,25 +45,25 @@ export const AddCoverImg = () => {
       }
     } catch (error) {
       console.log("error", error);
-      alert("Database-аас зураг авахад алдаа гарлаа!");
+      toast.error("Database-аас зураг авахад алдаа гарлаа!");
     }
   };
 
   const changeCoverHandler = async (userId: number | null) => {
     if (!backgroundImageFile) {
-      alert("Шинэ зураг сонгогдоогүй байна!");
+      toast.warning("Шинэ зураг сонгогдоогүй байна!");
       return;
     }
 
     const imageURL = await uploadImage(backgroundImageFile);
 
     try {
-      const response = await axios.put(`/api/coverImage`, {
+      await axios.put(`/api/coverImage`, {
         userId: userId,
         imageURL: imageURL,
       });
 
-      alert("Зураг амжилттай солигдлоо!");
+      toast.success("Зураг амжилттай солигдлоо!");
 
       // UI-г шинэчлэх
       getBackgroundImage(String(userId));
@@ -88,7 +72,7 @@ export const AddCoverImg = () => {
       setBackgroundImageFile(null);
     } catch (error) {
       console.log("error", error);
-      alert("Change Cover Handler алдаа гарлаа!");
+      toast.error("Зураг солиход алдаа гарлаа!");
     }
   };
 

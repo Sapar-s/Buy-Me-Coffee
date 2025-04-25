@@ -16,11 +16,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import { Camera, Loader2, X } from "lucide-react";
 import { uploadImage } from "@/lib/handle-upload";
 import { useUser } from "../_context/UserContext";
 import axios from "axios";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   photo: z.string().nonempty("Зураг заавал шаардлагатай"),
@@ -61,11 +61,11 @@ export const PersonalInfo = () => {
       });
 
       if (res.status === 200) {
-        alert(res.data.message);
+        toast.success("Амжилттай хадгаллаа!");
       }
     } catch (err) {
       console.error(err);
-      alert("error ");
+      toast.error("Алдаа гарлаа!");
     } finally {
       setLoading(false);
     }

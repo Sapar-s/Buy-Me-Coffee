@@ -2,6 +2,7 @@
 
 import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
+import { toast } from "sonner";
 
 type ProfileContextType = {
   userId: number | null;
@@ -30,7 +31,7 @@ const ProfileProvider = ({ children }: { children: React.ReactNode }) => {
       setSuccessMessage(res.data.successMessage[0]?.successmessage || "");
     } catch (error) {
       console.log("error", error);
-      alert("error in getSuccessMessage");
+      toast.error("Мэдээллийг авахад алдаа гарлаа!");
     }
   };
 

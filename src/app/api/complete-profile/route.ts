@@ -26,11 +26,11 @@ export async function POST(req: Request): Promise<Response> {
       );
     }
 
-    // const profileId = (newProfile[0] as { id: number }).id; // Ensuring type safety
+    const profileId = (newProfile[0] as { id: number }).id;
 
-    // const updateUser = `UPDATE "Users" SET Profile = $1 WHERE id = $2`;
+    const updateUser = `UPDATE "Users" SET "Profile" = $1 WHERE id = $2`;
 
-    // await runQuery(updateUser, [profileId, userId]);
+    await runQuery(updateUser, [profileId, userId]);
 
     return new NextResponse(
       JSON.stringify({

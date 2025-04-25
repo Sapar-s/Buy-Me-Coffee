@@ -4,6 +4,7 @@ import { useState } from "react";
 import FirstStep from "./components/FirstStep";
 import { SecondStep } from "./components/SecondStep";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const SignUpPage = () => {
   const router = useRouter();
@@ -27,7 +28,7 @@ const SignUpPage = () => {
       router.push("/login");
     } catch (error) {
       console.log("error", error);
-      alert("error in signup user");
+      toast.error("error in signup user");
     }
   };
 
