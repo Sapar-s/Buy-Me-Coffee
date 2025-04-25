@@ -8,7 +8,6 @@ import { SupporterPage } from "@/app/_components/SupporterPage";
 import { useParams } from "next/navigation";
 
 const ViewProfile = () => {
-  // const { users } = useUser()!;
   const params = useParams();
   const profileId = Number(
     Array.isArray(params["profile-id"])
